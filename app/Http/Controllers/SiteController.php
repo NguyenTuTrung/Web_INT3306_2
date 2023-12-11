@@ -149,12 +149,6 @@ class SiteController extends Controller
         return view($this->activeTemplate . 'order_tracking', compact('pageTitle', 'orderNumber'));
     }
 
-    public function cookieAccept(){
-        session()->put('cookie_accepted',true);
-        $notify[] = ['success','Cookie accepted successfully'];
-        return back()->withNotify($notify);
-    }
-
     public function placeholderImage($size = null){
         $imgWidth = explode('x',$size)[0];
         $imgHeight = explode('x',$size)[1];

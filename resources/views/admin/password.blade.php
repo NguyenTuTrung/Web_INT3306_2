@@ -11,13 +11,13 @@
                             <img src="{{ getImage(imagePath()['profile']['admin']['path'].'/'. $admin->image,imagePath()['profile']['admin']['size'])}}" alt="@lang('Image')">
                         </div>
                         <div class="pl-3">
-                            <h4 class="text--white">{{__($admin->name)}}</h4>
+                            <h4 class="text--white">{{__($admin->fullname)}}</h4>
                         </div>
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Name')
-                            <span class="font-weight-bold">{{ __($admin->name) }}</span>
+                            <span class="font-weight-bold">{{ __($admin->fullname) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Username')

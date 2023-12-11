@@ -87,7 +87,7 @@ class SupportTicketController extends Controller
             $ticket->save();
 
             $message->supportticket_id = $ticket->id;
-            $message->admin_id = Auth::guard('admin')->id();
+            $message->admin_id = Auth::user()->id()->first();
             $message->message = $request->message;
             $message->save();
 

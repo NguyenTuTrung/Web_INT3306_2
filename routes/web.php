@@ -22,6 +22,21 @@ Route::prefix('ticket')->group(function () {
 });
 
 
+Route::namespace('Auth')->group(function () {
+    Route::get('login', 'LoginController@showLoginForm')->name('login');
+    Route::post('login', 'LoginController@login')->name('login');
+    Route::get('logout', 'LoginController@logout')->name('logout');
+    // Password Reset
+    Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('password/email', 'ForgotPasswordController@sendResetCodeEmail')->name('password.email');
+    Route::get('password/code-verify', 'ForgotPasswordController@codeVerify')->name('password.code.verify');
+    Route::post('password/reset', 'ResetPasswordController@reset')->name('password.update');
+    Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('password/verify-code', 'ForgotPasswordController@verifyCode')->name('password.verify.code');
+
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Start Admin Area
@@ -29,17 +44,6 @@ Route::prefix('ticket')->group(function () {
 */
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
-    Route::namespace('Auth')->group(function () {
-        Route::get('/', 'LoginController@showLoginForm')->name('login');
-        Route::post('/', 'LoginController@login')->name('login');
-        Route::get('logout', 'LoginController@logout')->name('logout');
-        // Admin Password Reset
-        Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.reset');
-        Route::post('password/reset', 'ForgotPasswordController@sendResetCodeEmail');
-        Route::post('password/verify-code', 'ForgotPasswordController@verifyCode')->name('password.verify.code');
-        Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset.form');
-        Route::post('password/reset/change', 'ResetPasswordController@reset')->name('password.change');
-    });
 
     Route::middleware('admin')->group(function () {
         Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
@@ -172,16 +176,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
 */
 
 Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function () {
-    Route::get('/', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('/', 'Auth\LoginController@login');
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetCodeEmail')->name('password.email');
-    Route::get('password/code-verify', 'Auth\ForgotPasswordController@codeVerify')->name('password.code.verify');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-    Route::post('password/verify-code', 'Auth\ForgotPasswordController@verifyCode')->name('password.verify.code');
 
     Route::middleware('auth')->group(function () {
         Route::middleware(['checkStatus'])->group(function () {
@@ -218,16 +212,6 @@ Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function
 
 
 Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
-    Route::get('/', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('/', 'Auth\LoginController@login');
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetCodeEmail')->name('password.email');
-    Route::get('password/code-verify', 'Auth\ForgotPasswordController@codeVerify')->name('password.code.verify');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-    Route::post('password/verify-code', 'Auth\ForgotPasswordController@verifyCode')->name('password.verify.code');
 
     Route::middleware('auth')->group(function () {
         Route::middleware(['checkStatus'])->group(function () {
@@ -257,14 +241,6 @@ Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
                 Route::get('courier/search', 'CourierController@courierSearch')->name('courier.search');
             });
         });
-    });
-});
-
-Route::name('user.')->prefix('user')->group(function () {
-    Route::middleware('auth')->group(function () {
-        Route::get('authorization', 'AuthorizationController@authorizeForm')->name('authorization');
-        Route::get('resend-verify', 'AuthorizationController@sendVerifyCode')->name('send.verify.code');
-        Route::post('verify-g2fa', 'AuthorizationController@g2faVerification')->name('go2fa.verify');
     });
 });
 

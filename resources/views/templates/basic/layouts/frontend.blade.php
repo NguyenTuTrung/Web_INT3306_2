@@ -23,7 +23,6 @@
 </head>
 
 <body>
-    @stack('fbComment')
     <div class="overlay"></div>
     <a href="#0" class="scrollToTop"><i class="las la-angle-up"></i></a>
     <div class="preloader">
@@ -32,24 +31,6 @@
     @include($activeTemplate . 'partials.header')
     @yield('content')
     @include($activeTemplate . 'partials.footer')
-    @php
-        $cookie = App\Models\Frontend::where('data_keys','cookie.data')->first();
-    @endphp
-
-
-
-
-    <div class="cookie__wrapper @if(session('cookie_accepted')) d-none @endif">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center justify-content-between">
-            <p class="txt my-2">
-              @php echo @$cookie->data_values->description @endphp<br>
-              <a href="{{ @$cookie->data_values->link }}" target="_blank">@lang('Read Policy')</a>
-            </p>
-              <button class="cmn--btn my-2 policy">@lang('Accept')</button>
-          </div>
-        </div>
-    </div>
 
 
     <script src="{{asset($activeTemplateTrue.'frontend/js/jquery-3.3.1.min.js')}}"></script>
@@ -72,20 +53,6 @@
             $(".langChanage").on("change", function() {
                 window.location.href = "{{route('home')}}/change/"+$(this).val() ;
             });
-            @if(@$cookie->data_values->status && !session('cookie_accepted'))
-                $('#cookieModal').modal('show');
-            @endif
-
-            $('.policy').on('click',function(){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get('{{ route('cookie.accept') }}', function(response){
-                $('.cookie__wrapper').addClass('d-none');
-            });
-        });
         });
     </script>
 </body>

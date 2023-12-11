@@ -23,6 +23,10 @@
                 <div class="right-area d-none d-md-block">
                     <a href="{{route('order.tracking')}}" class="cmn--btn btn--sm mr-3">@lang('Order Tracking')</a>
                 </div>
+
+                <div class="right-area d-none d-md-block">
+                    <a href="{{route('login')}}" class="cmn--btn btn--sm mr-3">@lang('Login')</a>
+                </div>
             </div>
         </div>
     </div>

@@ -148,34 +148,6 @@
             </div>
         </div>
     </div>
-
-     <div class="row mb-none-30 mt-5">
-        <div class="col-lg-12 mb-30">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">@lang('Staff And Manager Login Url')</h5>
-                     <div class="input-group ">
-                        <input id="staff" type="text" class="form-control form-control-lg"
-                               value="{{route('staff.login')}}"  readonly="">
-                        <div class="input-group-append" id="copybtn">
-                            <span class="input-group-text btn--success"
-                                  title="" onclick="myFunction()" >@lang('COPY')</span>
-                        </div>
-                    </div>
-
-                    <div class="input-group mt-3">
-                        <input id="manager" type="text" class="form-control form-control-lg"
-                               value="{{route('manager.login')}}"  readonly="">
-                        <div class="input-group-append" id="copybtn">
-                            <span class="input-group-text btn--success"
-                                  title="" onclick="myFunction1()" >@lang('COPY')</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 

@@ -21,7 +21,6 @@ class CreateBranchManagersTable extends Migration
             $table->string('username',40)->nullable()->unique();
             $table->string('email',40)->nullable()->unique();
             $table->string('phone', 40)->nullable()->unique();
-            $table->string('show_password')->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(0)->comment('Active 1 , Inactive 2');
             $table->timestamps();

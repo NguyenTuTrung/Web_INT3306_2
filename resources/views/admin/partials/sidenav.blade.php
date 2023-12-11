@@ -265,16 +265,7 @@
                         </ul>
                     </div>
                 </li>
-
-                <li class="sidebar__menu-header">@lang('Extra')</li>
-
-                <li class="sidebar-menu-item {{menuActive('admin.setting.cookie')}}">
-                    <a href="{{route('admin.setting.cookie')}}" class="nav-link">
-                        <i class="menu-icon las la-cookie-bite"></i>
-                        <span class="menu-title">@lang('GDPR Cookie')</span>
-                    </a>
-                </li>
-        
+                    
                 <li class="sidebar-menu-item {{menuActive('admin.setting.optimize')}}">
                     <a href="{{route('admin.setting.optimize')}}" class="nav-link">
                         <i class="menu-icon las la-broom"></i>

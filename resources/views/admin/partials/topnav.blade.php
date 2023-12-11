@@ -69,9 +69,9 @@
             <li class="dropdown">
                 <button type="button" class="" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                   <span class="navbar-user">
-                    <span class="navbar-user__thumb"><img src="{{ getImage('assets/admin/images/profile/'. auth()->guard('admin')->user()->image) }}" alt="image"></span>
+                    <span class="navbar-user__thumb"><img src="{{ getImage('assets/admin/images/profile/'. auth()->user()->image) }}" alt="image"></span>
                     <span class="navbar-user__info">
-                      <span class="navbar-user__name">{{auth()->guard('admin')->user()->username}}</span>
+                      <span class="navbar-user__name">{{auth()->user()->username}}</span>
                     </span>
                     <span class="icon"><i class="las la-chevron-circle-down"></i></span>
                   </span>
@@ -89,7 +89,7 @@
                         <span class="dropdown-menu__caption">@lang('Password')</span>
                     </a>
 
-                    <a href="{{ route('admin.logout') }}"
+                    <a href="{{ route('logout') }}"
                        class="dropdown-menu__item d-flex align-items-center px-3 py-2">
                         <i class="dropdown-menu__icon las la-sign-out-alt"></i>
                         <span class="dropdown-menu__caption">@lang('Logout')</span>

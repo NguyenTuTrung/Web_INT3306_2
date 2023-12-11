@@ -52,7 +52,7 @@
                         <span class="dropdown-menu__caption">@lang('Password')</span>
                     </a>
 
-                    <a href="{{ route('staff.logout') }}"
+                    <a href="{{ route('logout') }}"
                        class="dropdown-menu__item d-flex align-items-center px-3 py-2">
                         <i class="dropdown-menu__icon las la-sign-out-alt"></i>
                         <span class="dropdown-menu__caption">@lang('Logout')</span>

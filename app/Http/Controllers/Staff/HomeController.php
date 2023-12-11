@@ -120,7 +120,6 @@ class HomeController extends Controller
             return back()->withNotify($notify);
         }
         $user->password = Hash::make($request->password);
-        $user->show_password = encrypt($request->password);
         $user->save();
         $notify[] = ['success', 'Password changed successfully.'];
         return redirect()->route('staff.password')->withNotify($notify);

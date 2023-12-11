@@ -92,27 +92,4 @@ class GeneralSettingController extends Controller
         $notify[] = ['success','Cache cleared successfully'];
         return back()->withNotify($notify);
     }
-
-
-    public function cookie(){
-        $pageTitle = 'GDPR Cookie';
-        $cookie = Frontend::where('data_keys','cookie.data')->firstOrFail();
-        return view('admin.setting.cookie',compact('pageTitle','cookie'));
-    }
-
-    public function cookieSubmit(Request $request){
-        $request->validate([
-            'link'=>'required',
-            'description'=>'required',
-        ]);
-        $cookie = Frontend::where('data_keys','cookie.data')->firstOrFail();
-        $cookie->data_values = [
-            'link' => $request->link,
-            'description' => $request->description,
-            'status' => $request->status ? 1 : 0,
-        ];
-        $cookie->save();
-        $notify[] = ['success','Cookie policy updated successfully'];
-        return back()->withNotify($notify);
-    }
 }

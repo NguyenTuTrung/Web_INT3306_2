@@ -71,8 +71,8 @@ class AdminController extends Controller
 
     public function profile()
     {
-        $pageTitle = 'Profile';
-        $admin = Auth::guard('admin')->user();
+        $pageTitle = 'Admin Profile';
+        $admin = Auth::user();
         return view('admin.profile', compact('pageTitle', 'admin'));
     }
 
@@ -83,7 +83,7 @@ class AdminController extends Controller
             'email' => 'required|email',
             'image' => ['nullable','image',new FileTypeValidate(['jpg','jpeg','png'])]
         ]);
-        $user = Auth::guard('admin')->user();
+        $user = Auth::user();
 
         if ($request->hasFile('image')) {
             try {
@@ -106,7 +106,7 @@ class AdminController extends Controller
     public function password()
     {
         $pageTitle = 'Password Setting';
-        $admin = Auth::guard('admin')->user();
+        $admin = Auth::user();
         return view('admin.password', compact('pageTitle', 'admin'));
     }
 
@@ -117,7 +117,7 @@ class AdminController extends Controller
             'password' => 'required|min:5|confirmed',
         ]);
 
-        $user = Auth::guard('admin')->user();
+        $user = Auth::user();
         if (!Hash::check($request->old_password, $user->password)) {
             $notify[] = ['error', 'Password do not match !!'];
             return back()->withNotify($notify);

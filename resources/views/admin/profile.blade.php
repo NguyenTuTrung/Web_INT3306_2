@@ -9,13 +9,13 @@
                             <img src="{{ getImage(imagePath()['profile']['admin']['path'].'/'. $admin->image,imagePath()['profile']['admin']['size'])}}" alt="@lang('Image')">
                         </div>
                         <div class="pl-3">
-                            <h4 class="text--white">{{__($admin->name)}}</h4>
+                            <h4 class="text--white">{{__($admin->fullname)}}</h4>
                         </div>
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Name')
-                            <span class="font-weight-bold">{{__($admin->name)}}</span>
+                            <span class="font-weight-bold">{{__($admin->fullname)}}</span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -45,7 +45,7 @@
                                     <div class="image-upload">
                                         <div class="thumb">
                                             <div class="avatar-preview">
-                                                <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['admin']['path'].'/'.auth()->guard('admin')->user()->image,imagePath()['profile']['admin']['size']) }})">
+                                                <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['admin']['path'].'/'.auth()->user()->image,imagePath()['profile']['admin']['size']) }})">
                                                     <button type="button" class="remove-image"><i class="fa fa-times"></i></button>
                                                 </div>
                                             </div>
@@ -61,12 +61,12 @@
                             <div class="col-md-6">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Name')</label>
-                                    <input class="form-control" type="text" name="name" value="{{ auth()->guard('admin')->user()->name }}" >
+                                    <input class="form-control" type="text" name="name" value="{{ auth()->user()->name }}" >
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Email')</label>
-                                    <input class="form-control" type="email" name="email" value="{{ auth()->guard('admin')->user()->email }}" >
+                                    <input class="form-control" type="email" name="email" value="{{ auth()->user()->email }}" >
                                 </div>
                             </div>
                         </div>

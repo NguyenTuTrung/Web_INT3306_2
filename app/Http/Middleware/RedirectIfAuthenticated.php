@@ -26,6 +26,9 @@ class RedirectIfAuthenticated
             elseif($user->user_type == "staff"){
                 return redirect()->route('staff.dashboard');
             }
+            elseif ($user->user_type == "admin") {
+                return redirect()->route('admin.dashboard');
+            }
         }
         return $next($request);
         
