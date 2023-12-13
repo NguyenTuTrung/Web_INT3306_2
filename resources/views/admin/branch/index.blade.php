@@ -9,6 +9,7 @@
                             <thead>
                                 <tr>
                                     <th>@lang('Name - Address')</th>
+                                    <th>@lang('Warehouse')</th>
                                     <th>@lang('Email - Phone')</th>
                                     <th>@lang('Status')</th>
                                     <th>@lang('Creations Date')</th>
@@ -22,6 +23,11 @@
                                         <span class="font-weight-bold">{{__($branch->name)}}</span><br>
                                         <span>{{$branch->address}}</span>
                                     </td>
+
+                                    <td data-label="@lang('Warehouse')">
+                                        <span class="font-weight-bold">{{__(optional($branch->warehouse)->name)}}</span><br>
+                                    </td>
+
                                     <td data-label="@lang('Email - Phone')">
                                         <span class="font-weight-bold">{{$branch->email}}</span><br>
                                         <span>{{$branch->phone}}</span>
@@ -34,6 +40,7 @@
                                             <span class="badge badge--danger">@lang('Closed')</span>
                                         @endif
                                     </td>
+
                                     <td data-label="@lang('Creations Date')">
                                          {{ showDateTime($branch->created_at) }} <br> {{ diffForHumans($branch->created_at) }}
                                     </td>
@@ -100,6 +107,16 @@
                             <input type="text" class="form-control form-control-lg" name="address" placeholder="@lang("Enter Address")"  maxlength="255" required="">
                         </div>
 
+                        <div class="form-group">
+                            <label for="warehouse" class="form-control-label font-weight-bold">@lang('Select Warehouse')</label>
+                            <select class="form-control form-control-lg" name="warehouse" id="warehouse" required="">
+                                <option value="">@lang('Select One')</option>
+                                @foreach($warehouses as $warehouse)
+                                    <option value="{{$warehouse->id}}">{{__($warehouse->name)}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
 
                         <div class="form-group">
                             <label class="form-control-label font-weight-bold">@lang('Status') </label>
@@ -150,6 +167,16 @@
                         <div class="form-group">
                             <label for="address" class="form-control-label font-weight-bold">@lang('Address')</label>
                             <input type="text" class="form-control form-control-lg" name="address" placeholder="@lang("Enter Address")"  maxlength="255" required="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="warehouse" class="form-control-label font-weight-bold">@lang('Select Warehouse')</label>
+                            <select class="form-control form-control-lg" name="warehouse" id="warehouse" required="}}">
+                                <option>@lang('Select One')</option>
+                                @foreach($warehouses as $warehouse)
+                                    <option value="{{$warehouse->id}}">{{__($warehouse->name)}}</option>
+                                @endforeach
+                            </select>
                         </div>
 
 

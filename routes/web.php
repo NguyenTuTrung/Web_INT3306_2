@@ -223,6 +223,46 @@ Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function
     });
 });
 
+/*
+|--------------------------------------------------------------------------
+| Start Manager Warehouse Area
+|--------------------------------------------------------------------------
+*/
+
+Route::namespace('Manager_Warehouse')->name('manager_warehouse.')->prefix('manager_warehouse')->group(function () {
+
+    Route::middleware('auth')->group(function () {
+        Route::middleware(['checkStatus'])->group(function () {
+            Route::middleware('manager_warehouse')->group(function () {
+                Route::get('dashboard', 'HomeController@dashboard')->name('dashboard');
+                Route::get('profile', 'HomeController@profile')->name('profile');
+                Route::post('profile/update', 'HomeController@profileUpdate')->name('profile.update');
+                Route::get('password', 'HomeController@password')->name('password');
+                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
+
+                Route::get('warehouse/list', 'HomeController@warehouseList')->name('warehouse.index');
+                Route::get('warehouse/search', 'HomeController@warehouseSearch')->name('warehouse.search');
+
+                Route::get('courier/list', 'HomeController@courierInfo')->name('courier.index');
+                Route::get('dispatch/courier/list', 'HomeController@sendCourier')->name('courier.dispatch');
+                Route::get('upcoming/courier/list', 'HomeController@receivedCourier')->name('courier.upcoming');
+                Route::get('courier/search/date/{scope}', 'HomeController@courierSearchDate')->name('courier.search.date');
+                Route::get('courier/search', 'HomeController@courierSearch')->name('courier.search');
+                Route::get('branch/list', 'HomeController@branchList')->name('branch.list');
+                Route::get('branch/search', 'HomeController@branchSearch')->name('branch.search');
+               
+
+                //Manage Staff
+                Route::get('staff/create', 'StaffController@create')->name('staff.create');
+                Route::get('staff/list', 'StaffController@index')->name('staff.index');
+                Route::post('staff/store', 'StaffController@store')->name('staff.store');
+                Route::get('staff/edit/{id}', 'StaffController@edit')->name('staff.edit');
+                Route::post('staff/update/{id}', 'StaffController@update')->name('staff.update');
+                Route::get('staff/search/', 'StaffController@search')->name('staff.search');
+            });
+        });
+    });
+});
 
 Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
 

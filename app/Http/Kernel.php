@@ -67,10 +67,12 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'admin' => \App\Http\Middleware\Admin::class,
-        'checkStatus' => \App\Http\Middleware\CheckStatus::class,
-        'checkStatusApi' => \App\Http\Middleware\CheckStatusApi::class,
         'manager' => \App\Http\Middleware\Manager::class,
         'staff' => \App\Http\Middleware\Staff::class,
+        'manager_warehouse' => \App\Http\Middleware\Manager_Warehouse::class,
+        'staff_warehouse' => \App\Http\Middleware\Staff_Warehouse::class,
+        'checkStatus' => \App\Http\Middleware\CheckStatus::class,
+        'checkStatusApi' => \App\Http\Middleware\CheckStatusApi::class,
         'demo' => \App\Http\Middleware\Demo::class,
     ];
 }

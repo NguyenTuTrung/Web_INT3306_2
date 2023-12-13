@@ -22,11 +22,11 @@ class Staff
                 return $next($request);
             } else {
                 $notify[] = ['error', 'Manager not allowed to access this page'];
-                return redirect()->route('home')->withNotify($notify);
+                return redirect()->route('login')->withNotify($notify);
             }
         }else {
             $notify[] = ['error', 'Manager not allowed to access this page'];
-            return redirect()->route('home')->withNotify($notify);
+            return redirect()->route('login')->withNotify($notify);
         }
     }
 }
