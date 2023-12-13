@@ -117,7 +117,7 @@ class CourierSettingController extends Controller
     {
         $pageTitle = "Invoice";
         $courierInfo = CourierInfo::where('id', $id)->first();
-        $courierProductInfos = CourierProduct::where('courier_info_id', $courierInfo->id)->get();
+        $courierProductInfos = CourierProduct::with('type')->where('courier_info_id', $courierInfo->id)->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
         $code = '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($courierInfo->code, 'C128') . '" alt="barcode"   />' . "<br>" . $courierInfo->code;
         return view('admin.courier.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'code'));
