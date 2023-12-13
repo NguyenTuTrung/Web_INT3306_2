@@ -43,20 +43,56 @@
                     </div>
                 </li>
 
-                <li class="sidebar-menu-item  {{menuActive('admin.branch.index')}}">
-                    <a href="{{route('admin.branch.index')}}" class="nav-link"
-                       data-default-url="{{ route('admin.branch.index') }}">
+                <li class="sidebar-menu-item sidebar-dropdown">
+                    <a href="javascript:void(0)" class="{{menuActive('admin.warehouse.index',3)}} {{menuActive('admin.branch.index',3)}}">
                         <i class="menu-icon las la-code-branch"></i>
-                        <span class="menu-title">@lang('Manage Branch')</span>
+                        <span class="menu-title">@lang('Manage')</span>
                     </a>
+                    <div class="sidebar-submenu {{menuActive('admin.warehouse.index',2)}} {{menuActive('admin.branch.index',2)}}">
+                        <ul>
+                            <li class="sidebar-menu-item {{menuActive('admin.warehouse.index')}}">
+                                <a href="{{route('admin.warehouse.index')}}" class="nav-link"
+                                    data-default-url="{{route('admin.warehouse.index')}}">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Manage Warehouse')</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-menu-item  {{menuActive('admin.branch.index')}}">
+                                <a href="{{route('admin.branch.index')}}" class="nav-link"
+                                data-default-url="{{ route('admin.branch.index') }}">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Manage Branch')</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
-                <li class="sidebar-menu-item {{menuActive('admin.branch.manager*')}}">
-                    <a href="{{route('admin.branch.manager.index')}}" class="nav-link"
-                       data-default-url="{{route('admin.branch.manager.index')}}">
+                <li class="sidebar-menu-item sidebar-dropdown">
+                    <a href="javascript:void(0)" class="{{menuActive('admin.warehouse.manager*',3)}} {{menuActive('admin.branch.manager*',3)}}">
                         <i class="menu-icon las la-users"></i>
-                        <span class="menu-title">@lang('Branch Manager')</span>
+                        <span class="menu-title">@lang('Manager')</span>
                     </a>
+                    <div class="sidebar-submenu {{menuActive('admin.warehouse.manager*',2)}} {{menuActive('admin.branch.manager*',2)}}">
+                        <ul>
+                            <li class="sidebar-menu-item {{menuActive('admin.warehouse.manager*')}}">
+                                <a href="{{route('admin.warehouse.manager.index')}}" class="nav-link"
+                                    data-default-url="{{route('admin.warehouse.manager.index')}}">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Warehouse Manager')</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-menu-item {{menuActive('admin.branch.manager*')}}">
+                                <a href="{{route('admin.branch.manager.index')}}" class="nav-link"
+                                    data-default-url="{{route('admin.branch.manager.index')}}">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Branch Manager')</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
                 <li class="sidebar-menu-item {{menuActive('admin.branch.income')}}">

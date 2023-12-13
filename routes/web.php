@@ -66,6 +66,11 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('branch/store', 'BranchController@store')->name('branch.store');
         Route::post('branch/update', 'BranchController@update')->name('branch.update');
 
+        // Warehouse
+        Route::get('warehouse/list', 'WarehouseController@index')->name('warehouse.index');
+        Route::post('warehouse/store', 'WarehouseController@store')->name('warehouse.store');
+        Route::post('warehouse/update', 'WarehouseController@update')->name('warehouse.update');
+
         //Branch Manager 
         Route::get('branch/manager/list', 'BranchManagerController@index')->name('branch.manager.index');
         Route::get('branch/manager/create', 'BranchManagerController@create')->name('branch.manager.create');
@@ -73,6 +78,14 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('branch/manager/edit/{id}', 'BranchManagerController@edit')->name('branch.manager.edit');
         Route::post('branch/manager/update/{id}', 'BranchManagerController@update')->name('branch.manager.update');
         Route::get('branch/manager/staff/{id}', 'BranchManagerController@staffList')->name('branch.manager.staff.list');
+
+        //Warehouse Manager 
+        Route::get('warehouse/manager/list', 'WarehouseManagerController@index')->name('warehouse.manager.index');
+        Route::get('warehouse/manager/create', 'WarehouseManagerController@create')->name('warehouse.manager.create');
+        Route::post('warehouse/manager/store', 'WarehouseManagerController@store')->name('warehouse.manager.store');
+        Route::get('warehouse/manager/edit/{id}', 'WarehouseManagerController@edit')->name('warehouse.manager.edit');
+        Route::post('warehouse/manager/update/{id}', 'WarehouseManagerController@update')->name('warehouse.manager.update');
+        Route::get('warehouse/manager/staff/{id}', 'WarehouseManagerController@staffList')->name('warehouse.manager.staff.list');
 
         // Couier Setting
         Route::get('manage/unit/', 'CourierSettingController@unitIndex')->name('unit.index');
