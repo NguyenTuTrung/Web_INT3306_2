@@ -28,7 +28,7 @@ class HomeController extends Controller
         $warehouseListCount = Warehouse::where('status', 1)->count();
         $totalStaffCount =  User::where('user_type', 'staff_warehouse')->where('warehouse_id', $manager_warehouse->warehouse_id)->count();
         $courierInfoCount = CourierInfo::where('receiver_warehouse_id', $manager_warehouse->warehouse_id)->orWhere('sender_warehouse_id', $manager_warehouse->warehouse_id)->count();
-        $branchCount = Branch::where('warehouse_id', $manager_warehouse->warehouse_id)->count();
+        $branchCount = Branch::where('id', $manager_warehouse->warehouse_id)->count();
         $courierInfos = CourierInfo::where('receiver_warehouse_id', $manager_warehouse->warehouse_id)->orWhere('sender_warehouse_id', $manager_warehouse->warehouse_id)->orderBy('id', 'DESC')->take(5)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->get();
         return view('manager_warehouse.dashboard', compact('pageTitle', 'warehouseListCount', 'totalStaffCount', 'courierInfoCount', 'branchCount', 'courierInfos', 'emptyMessage'));
     }

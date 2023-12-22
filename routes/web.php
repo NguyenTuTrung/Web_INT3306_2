@@ -297,6 +297,28 @@ Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
     });
 });
 
+Route::namespace('Staff_Warehouse')->name('staff_warehouse.')->prefix('staff_warehouse')->group(function () {
+
+    Route::middleware('auth')->group(function () {
+        Route::middleware(['checkStatus'])->group(function () {
+            Route::middleware('staff_warehouse')->group(function () {
+                Route::get('dashboard', 'HomeController@dashboard')->name('dashboard');
+                Route::get('profile', 'HomeController@profile')->name('profile');
+                Route::post('profile/update', 'HomeController@profileUpdate')->name('profile.update');
+                Route::get('password', 'HomeController@password')->name('password');
+                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
+                Route::get('branch/list', 'HomeController@branchList')->name('branch.index');
+                Route::get('branch/search', 'HomeController@branchSearch')->name('branch.search');
+
+                Route::get('send/courier/list', 'HomeController@sendCourierList')->name('send.courier.list');
+                Route::get('received/courier/list', 'HomeController@receivedCourierList')->name('received.courier.list');
+
+            });
+        });
+    });
+});
+
+
 Route::get('/menu/{slug}/{id}', 'SiteController@footerMenu')->name('footer.menu');
 Route::get('/order/tracking', 'SiteController@orderTracking')->name('order.tracking');
 Route::get('/contact', 'SiteController@contact')->name('contact');
@@ -308,3 +330,6 @@ Route::get('blog/{id}/{slug}', 'SiteController@blogDetails')->name('blog.details
 Route::get('placeholder-image/{size}', 'SiteController@placeholderImage')->name('placeholder.image');
 Route::get('/{slug}', 'SiteController@pages')->name('pages');
 Route::get('/', 'SiteController@index')->name('home');
+Route::get('/hello', function () {
+    return 'hello';
+});
