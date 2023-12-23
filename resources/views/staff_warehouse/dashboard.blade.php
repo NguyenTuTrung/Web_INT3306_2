@@ -30,7 +30,7 @@
                     <div class="desciption">
                         <span>@lang('Total Received Courier')</span>
                     </div>
-                    <a href="{{route('staff.received.courier.list')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                    <a href="{{route('staff_warehouse.received.courier.list')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
                 </div>
             </div>
         </div>
@@ -42,13 +42,13 @@
                 </div>
                 <div class="details">
                     <div class="numbers">
-                        <span class="amount">{{$branchCount}}</span>
+                        <span class="amount">{{$warehouseCount}}</span>
                     </div>
                     <div class="desciption">
-                        <span>@lang('Total Brach')</span>
+                        <span>@lang('Total Warehouse')</span>
                     </div>
 
-                    <a href="{{route('staff.branch.index')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                    <a href="{{route('staff_warehouse.warehouse.index')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
                         <span>@lang('Total Cash Collection')</span>
                     </div>
 
-                    <a href="{{route('staff.cash.income')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                    <a href="{{route('staff_warehouse.cash.income')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
                 </div>
             </div>
         </div>
@@ -80,8 +80,8 @@
                         <table class="table table--light style--two">
                             <thead>
                                 <tr>
-                                    <th>@lang('Sender Branch - Staff')</th>
-                                    <th>@lang('Receiver Branch - Staff')</th>
+                                    <th>@lang('Sender Branch/Warehouse - Staff')</th>
+                                    <th>@lang('Receiver Warehouse - Staff')</th>
                                     <th>@lang('Amount - Order Number')</th>
                                     <th>@lang('Creations Date')</th>
                                     <th>@lang('Payment Status')</th>
@@ -93,14 +93,14 @@
                             @forelse($courierDeliveys as $courierInfo)
                                 <tr>
                                     <td data-label="@lang('Sender Branch')">
-                                    <span>{{__($courierInfo->senderBranch->name)}}</span><br>
+                                    <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
                                     {{__($courierInfo->senderStaff->fullname)}}
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
                                     <span>
-                                        @if($courierInfo->receiver_branch_id)
-                                            {{__($courierInfo->receiverBranch->name)}}
+                                        @if($courierInfo->receiver_warehouse_id)
+                                            {{__($courierInfo->receiverWarehouse->name)}}
                                         @else
                                             @lang('N/A')
                                         @endif

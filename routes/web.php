@@ -307,11 +307,24 @@ Route::namespace('Staff_Warehouse')->name('staff_warehouse.')->prefix('staff_war
                 Route::post('profile/update', 'HomeController@profileUpdate')->name('profile.update');
                 Route::get('password', 'HomeController@password')->name('password');
                 Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
-                Route::get('branch/list', 'HomeController@branchList')->name('branch.index');
-                Route::get('branch/search', 'HomeController@branchSearch')->name('branch.search');
+                Route::get('warehouse/list', 'HomeController@warehouseList')->name('warehouse.index');
+                Route::get('warehouse/search', 'HomeController@warehouseSearch')->name('warehouse.search');
 
                 Route::get('send/courier/list', 'HomeController@sendCourierList')->name('send.courier.list');
                 Route::get('received/courier/list', 'HomeController@receivedCourierList')->name('received.courier.list');
+
+                //Courier
+                Route::get('courier/send', 'CourierController@create')->name('courier.create');
+                Route::post('courier/store', 'CourierController@store')->name('courier.store');
+                Route::get('courier/list', 'CourierController@manageCourierList')->name('courier.list');
+                Route::get('courier/details/{id}', 'CourierController@details')->name('courier.details');
+                Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
+                Route::post('courier/payment', 'CourierController@payment')->name('courier.payment');
+                Route::get('courier/delivery/list', 'CourierController@delivery')->name('delivery.list');
+                Route::post('courier/delivery/store', 'CourierController@deliveryStore')->name('courier.delivery');
+                Route::get('courier/cash/collection', 'CourierController@cash')->name('cash.income');
+                Route::get('courier/date/search', 'CourierController@courierDateSearch')->name('courier.date.search');
+                Route::get('courier/search', 'CourierController@courierSearch')->name('courier.search');
 
             });
         });

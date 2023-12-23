@@ -1,4 +1,4 @@
-@extends('staff.layouts.app')
+@extends('staff_warehouse.layouts.app')
 @section('panel')
     <div class="card">
         <div class="card-body">
@@ -48,8 +48,8 @@
                             <span class="badge badge--danger">@lang('Due')</span>
                          @endif
                     <br>
-                    <b>@lang('Sender At Branch'):</b> {{__($courierInfo->senderBranch->name)}}<br>
-                    <b>@lang('Received At Branch'):</b> {{__($courierInfo->receiverBranch->name)}}
+                    <b>@lang('Sender At Branch/Warehouse'):</b> {{__($courierInfo->senderWarehouse->name)}}<br>
+                    <b>@lang('Received At Warehouse'):</b> {{__($courierInfo->receiverWarehouse->name)}}
                 </div>
             </div>
 
@@ -126,7 +126,7 @@
                     </button>
             </div>
             
-            <form action="{{route('staff.courier.payment')}}" method="POST">
+            <form action="{{route('staff_warehouse.courier.payment')}}" method="POST">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="code">

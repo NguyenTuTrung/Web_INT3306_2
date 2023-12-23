@@ -20,6 +20,7 @@ class CourierInfo extends Model
         return $this->belongsTo(User::class, 'receiver_staff_id');
     }
 
+
     public function receiverBranch()
     {
         return $this->belongsTo(Branch::class, 'receiver_branch_id');
@@ -28,6 +29,16 @@ class CourierInfo extends Model
     public function senderBranch()
     {
         return $this->belongsTo(Branch::class, 'sender_branch_id');
+    }
+
+    public function receiverWarehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'receiver_warehouse_id');
+    }
+
+    public function senderWarehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'sender_warehouse_id');
     }
 
 

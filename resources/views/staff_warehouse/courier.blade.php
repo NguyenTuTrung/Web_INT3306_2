@@ -1,10 +1,10 @@
-@extends('staff.layouts.app')
+@extends('staff_warehouse.layouts.app')
 @section('panel')
     <div class="row mb-none-30">
         <div class="col-lg-12 col-md-12 mb-30">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{route('staff.courier.store')}}" method="POST">
+                    <form action="{{route('staff_warehouse.courier.store')}}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">
@@ -17,10 +17,11 @@
                                                 <input type="text" class="form-control form-control-lg" id="sender_name" name="sender_name" value="{{old('sender_name')}}" placeholder="@lang("Enter Sender Name")"  maxlength="40" required="">
                                             </div>
 
-                                             <div class="form-group col-lg-6">
+                                            <div class="form-group col-lg-6">
                                                 <label for="sender_phone" class="form-control-label font-weight-bold">@lang('Phone')</label>
                                                 <input type="text" class="form-control form-control-lg" id="phone" value="{{old('sender_phone')}}" name="sender_phone" placeholder="@lang("Enter Sender Phone")"  maxlength="40" required="">
                                             </div>
+
                                         </div>
 
                                         <div class="row">
@@ -47,36 +48,54 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="form-group col-lg-6">
+                                                <label for="=receiver" class="form-control-label font-weight-bold">@lang('Select Receiver')</label>
+                                                <select class="form-control form-control-lg" name="receiver" id="receiver" required="">
+                                                    <option value="">@lang('Select One')</option>
+                                                    <option value="branch">@lang('Branch')</option>
+                                                    <option value="warehouse">@lang('Warehouse')</option>
+                                                </select>
+                                            </div>
+
+                                            <div id="branchBlock" class="form-group col-lg-6" style="display: none;">
                                                 <label for="=branch" class="form-control-label font-weight-bold">@lang('Select Branch')</label>
                                                 <select class="form-control form-control-lg" name="branch" id="branch" required="">
-                                                    <option value="">@lang('Select One')</option>
+                                                    <option value="0" >@lang('Select One')</option>
                                                     @foreach($branchs as $branch)
                                                         <option value="{{$branch->id}}">{{__($branch->name)}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
 
+                                            <div id="warehouseBlock" class="form-group col-lg-6" style="display: none;">
+                                                <label for="warehouse" class="form-control-label font-weight-bold">@lang('Select warehouse')</label>
+                                                <select class="form-control form-control-lg" name="warehouse" id="warehouse" required="">
+                                                    <option value="0" >@lang('Select One')</option>
+                                                    @foreach($warehouses as $warehouse)
+                                                        <option value="{{$warehouse->id}}">{{__($warehouse->name)}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
                                             <div class="form-group col-lg-6">
                                                 <label for="receiver_name" class="form-control-label font-weight-bold">@lang('Name')</label>
                                                 <input type="text" class="form-control form-control-lg" id="receiver_name" name="receiver_name" value="{{old('receiver_name')}}" placeholder="@lang("Enter Receiver Name")"  maxlength="40" required="">
                                             </div>
-                                        </div>
 
-                                        <div class="row">
                                             <div class="form-group col-lg-6">
                                                 <label for="receiver_phone" class="form-control-label font-weight-bold">@lang('Phone')</label>
                                                 <input type="text" class="form-control form-control-lg" id="receiver_phone" name="receiver_phone" placeholder="@lang("Enter Receiver Phone")" value="{{old('receiver_phone')}}" required="">
                                             </div>
+                                        </div>
 
-
+                                        <div class="row">
                                             <div class="form-group col-lg-6">
                                                 <label for="receiver_email" class="form-control-label font-weight-bold">@lang('Email')</label>
                                                 <input type="email" class="form-control form-control-lg" id="receiver_email" name="receiver_email" value="{{old('receiver_email')}}" placeholder="@lang("Enter Receiver Email")"  required="">
                                             </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <div class="form-group col-lg-12">
+                                            <div class="form-group col-lg-6">
                                                 <label for="receiver_address" class="form-control-label font-weight-bold">@lang('Address')</label>
                                                 <input type="text" class="form-control form-control-lg" id="receiver_address" name="receiver_address" placeholder="@lang("Enter Receiver Address")" value="{{old('receiver_address')}}"  required="">
                                             </div>
@@ -144,7 +163,7 @@
 @endsection
 
 @push('breadcrumb-plugins')
-    <a href="{{route('staff.dashboard')}}" class="btn btn-sm btn--primary box--shadow1 text--small"><i class="las la-angle-double-left"></i> @lang('Go Back')</a>
+    <a href="{{route('staff_warehouse.dashboard')}}" class="btn btn-sm btn--primary box--shadow1 text--small"><i class="las la-angle-double-left"></i> @lang('Go Back')</a>
 @endpush
 
 @push('script')
@@ -217,6 +236,23 @@
         $(document).on('click', '.removeBtn', function () {
             $(this).closest('.user-data').remove();
         });
+    });
+
+    document.getElementById('receiver').addEventListener('change', function() {
+        var selectedValue = this.value;
+        var branchBlock = document.getElementById('branchBlock');
+        var warehouseBlock = document.getElementById('warehouseBlock');
+
+        if (selectedValue === 'branch') {
+            branchBlock.style.display = 'block';
+            warehouseBlock.style.display = 'none';
+        } else if (selectedValue === 'warehouse') {
+            branchBlock.style.display = 'none';
+            warehouseBlock.style.display = 'block';
+        } else {
+            branchBlock.style.display = 'none';
+            warehouseBlock.style.display = 'none';
+        }
     });
 </script>
 @endpush

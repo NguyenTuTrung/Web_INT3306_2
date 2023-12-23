@@ -3,53 +3,53 @@
     <button class="res-sidebar-close-btn"><i class="las la-times"></i></button>
     <div class="sidebar__inner">
         <div class="sidebar__logo">
-            <a href="{{route('staff.dashboard')}}" class="sidebar__main-logo"><img
+            <a href="{{route('staff_warehouse.dashboard')}}" class="sidebar__main-logo"><img
                     src="{{getImage(imagePath()['logoIcon']['path'] .'/logo.png')}}" alt="@lang('image')"></a>
-            <a href="{{route('staff.dashboard')}}" class="sidebar__logo-shape"><img
+            <a href="{{route('staff_warehouse.dashboard')}}" class="sidebar__logo-shape"><img
                     src="{{getImage(imagePath()['logoIcon']['path'] .'/favicon.png')}}" alt="@lang('image')"></a>
             <button type="button" class="navbar__expand"></button>
         </div>
 
         <div class="sidebar__menu-wrapper" id="sidebar__menuWrapper">
             <ul class="sidebar__menu">
-                <li class="sidebar-menu-item {{menuActive('staff.dashboard')}}">
-                    <a href="{{route('staff.dashboard')}}" class="nav-link ">
+                <li class="sidebar-menu-item {{menuActive('staff_warehouse.dashboard')}}">
+                    <a href="{{route('staff_warehouse.dashboard')}}" class="nav-link ">
                         <i class="menu-icon las la-home"></i>
                         <span class="menu-title">@lang('Dashboard')</span>
                     </a>
                 </li>
                 
-                <li class="sidebar-menu-item {{menuActive('staff.courier.create')}}">
-                    <a href="{{route('staff.courier.create')}}" class="nav-link"
-                       data-default-url="{{ route('staff.courier.create') }}">
+                <li class="sidebar-menu-item {{menuActive('staff_warehouse.courier.create')}}">
+                    <a href="{{route('staff_warehouse.courier.create')}}" class="nav-link"
+                       data-default-url="{{ route('staff_warehouse.courier.create') }}">
                         <i class="menu-icon las la-paper-plane"></i>
                         <span class="menu-title">@lang('Courier Send')</span>
                     </a>
                 </li>
 
 
-                 <li class="sidebar-menu-item {{menuActive('staff.courier*')}}">
-                    <a href="{{route('staff.courier.list')}}" class="nav-link"
-                       data-default-url="{{ route('staff.courier.list') }}">
+                 <li class="sidebar-menu-item {{menuActive('staff_warehouse.courier*')}}">
+                    <a href="{{route('staff_warehouse.courier.list')}}" class="nav-link"
+                       data-default-url="{{ route('staff_warehouse.courier.list') }}">
                         <i class="menu-icon las la-share"></i>
                         <span class="menu-title">@lang('Manage Courier')</span>
                     </a>
                 </li>
 
 
-                <li class="sidebar-menu-item {{menuActive('staff.delivery.list')}}">
-                    <a href="{{route('staff.delivery.list')}}" class="nav-link"
-                       data-default-url="{{ route('staff.delivery.list') }}">
+                <li class="sidebar-menu-item {{menuActive('staff_warehouse.delivery.list')}}">
+                    <a href="{{route('staff_warehouse.delivery.list')}}" class="nav-link"
+                       data-default-url="{{ route('staff_warehouse.delivery.list') }}">
                         <i class="menu-icon las la-truck-loading"></i>
                         <span class="menu-title">@lang('Upcoming Courier')</span>
                     </a>
                 </li>
 
-                <li class="sidebar-menu-item {{menuActive('staff.branch*')}}">
-                    <a href="{{route('staff.branch.index')}}" class="nav-link"
-                       data-default-url="{{ route('staff.branch.index') }}">
+                <li class="sidebar-menu-item {{menuActive('staff_warehouse.warehouse*')}}">
+                    <a href="{{route('staff_warehouse.warehouse.index')}}" class="nav-link"
+                       data-default-url="{{ route('staff_warehouse.warehouse.index') }}">
                         <i class="menu-icon las la-code-branch"></i>
-                        <span class="menu-title">@lang('Branch List')</span>
+                        <span class="menu-title">@lang('Warehouse List')</span>
                     </a>
                 </li>
 

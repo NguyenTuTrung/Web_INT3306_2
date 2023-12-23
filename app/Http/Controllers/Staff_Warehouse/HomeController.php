@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Staff_Warehouse;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Branch;
+use App\Models\Warehouse;
 use App\Models\CourierPayment;
 use App\Models\CourierInfo;
 use App\Models\GeneralSetting;
@@ -21,12 +21,30 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Staff Dashboard";
         $emptyMessage = "No data found";
-        $branchCount = Branch::where('status', 1)->count();
+        $warehouseCount = Warehouse::where('status', 1)->count();
         $sendCourierCount = CourierInfo::where('sender_staff_id', $user->id)->count();
         $receivedCourierCount = CourierInfo::where('receiver_staff_id', $user->id)->count();
         $cashCollection = CourierPayment::where('receiver_id', $user->id)->sum('amount');
-        $courierDeliveys = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->take(5)->get();
-        return view('staff_warehouse.dashboard', compact('pageTitle', 'branchCount', 'sendCourierCount', 'receivedCourierCount', 'cashCollection', 'courierDeliveys', 'emptyMessage'));
+        $courierDeliveys = CourierInfo::where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse','receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->take(5)->get();
+        return view('staff_warehouse.dashboard', compact('pageTitle', 'warehouseCount', 'sendCourierCount', 'receivedCourierCount', 'cashCollection', 'courierDeliveys', 'emptyMessage'));
+    }
+
+    public function sendCourierList()
+    {
+        $user = Auth::user();
+        $pageTitle = "Dispatch Courier List";
+        $emptyMessage = "No Data Found";
+        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('staff_warehouse.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
+    }
+
+    public function receivedCourierList()
+    {
+        $user = Auth::user();
+        $pageTitle = "Received Courier List";
+        $emptyMessage = "No Data Found";
+        $courierLists = CourierInfo::where('receiver_staff_id', $user->id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('staff_warehouse.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
     public function profile()
@@ -86,6 +104,25 @@ class HomeController extends Controller
         $user->save();
         $notify[] = ['success', 'Password changed successfully.'];
         return redirect()->route('staff_warehouse.password')->withNotify($notify);
+    }
+
+    public function warehouseSearch(Request $request)
+    {
+        $request->validate(['search' => 'required']);
+        $search = $request->search;
+        $pageTitle = "Warehouse search list";
+        $emptyMessage = "No data found";
+        $warehouses = Warehouse::where('status', 1)->where('name', 'like',"%$search%")->orWhere('email', 'like',"%$search%")->orWhere('address', 'like',"%$search%")->orderBy('id', 'DESC')->paginate(getPaginate());
+        return view('staff_warehouse.warehouse.index', compact('pageTitle', 'emptyMessage', 'warehouses', 'search'));
+        
+    }
+
+    public function warehouseList()
+    {
+        $pageTitle = "Warehouse List";
+        $emptyMessage = "No data found";
+        $warehouses = Warehouse::where('status', 1)->latest()->paginate(getPaginate());
+        return view('staff_warehouse.warehouse.index', compact('pageTitle', 'emptyMessage', 'warehouses'));
     }
 
 }
