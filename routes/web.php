@@ -197,7 +197,7 @@ Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function
                 Route::get('profile', 'HomeController@profile')->name('profile');
                 Route::post('profile/update', 'HomeController@profileUpdate')->name('profile.update');
                 Route::get('password', 'HomeController@password')->name('password');
-                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
+                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update');
 
                 Route::get('branch/list', 'HomeController@branchList')->name('branch.index');
                 Route::get('branch/search', 'HomeController@branchSearch')->name('branch.search');
@@ -218,6 +218,14 @@ Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function
                 Route::get('staff/edit/{id}', 'StaffController@edit')->name('staff.edit');
                 Route::post('staff/update/{id}', 'StaffController@update')->name('staff.update');
                 Route::get('staff/search/', 'StaffController@search')->name('staff.search');
+
+                //Manage Delivery Man
+                Route::get('delivery_man/create', 'DeliveryManController@create')->name('delivery_man.create');
+                Route::get('delivery_man/list', 'DeliveryManController@index')->name('delivery_man.index');
+                Route::post('delivery_man/store', 'DeliveryManController@store')->name('delivery_man.store');
+                Route::get('delivery_man/edit/{id}', 'DeliveryManController@edit')->name('delivery_man.edit');
+                Route::post('delivery_man/update/{id}', 'DeliveryManController@update')->name('delivery_man.update');
+                Route::get('delivery_man/search/', 'DeliveryManController@search')->name('delivery_man.search');
             });
         });
     });
@@ -284,6 +292,7 @@ Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
                 Route::get('courier/send', 'CourierController@create')->name('courier.create');
                 Route::post('courier/store', 'CourierController@store')->name('courier.store');
                 Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
+                Route::get('courier/dispatch/list', 'CourierController@dispatching')->name('dispatch.list');
                 Route::get('courier/delivery/list', 'CourierController@delivery')->name('delivery.list');
                 Route::get('courier/details/{id}', 'CourierController@details')->name('courier.details');
                 Route::post('courier/payment', 'CourierController@payment')->name('courier.payment');

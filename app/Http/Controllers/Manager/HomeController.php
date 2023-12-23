@@ -26,12 +26,12 @@ class HomeController extends Controller
         $manager = Auth::user();
         $pageTitle = "Manager Dashboard";
         $emptyMessage = "No data found";
-        $branchListCount = Branch::where('status', 1)->count();
+        $totalDeliveryManCount = User::where('user_type', 'delivery_man')->where('branch_id', $manager->branch_id)->count();
         $totalStaffCount = User::where('user_type', 'staff')->where('branch_id', $manager->branch_id)->count();
         $branchIncome = CourierPayment::where('branch_id', $manager->branch_id)->sum('amount');
         $courierInfoCount = CourierInfo::where('receiver_branch_id', $manager->branch_id)->orWhere('sender_branch_id', $manager->branch_id)->count();
         $courierInfos = CourierInfo::where('receiver_branch_id', $manager->branch_id)->orWhere('sender_branch_id', $manager->branch_id)->orderBy('id', 'DESC')->take(5)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->get();
-        return view('manager.dashboard', compact('pageTitle', 'branchListCount', 'totalStaffCount', 'branchIncome', 'courierInfoCount', 'courierInfos', 'emptyMessage'));
+        return view('manager.dashboard', compact('pageTitle', 'totalDeliveryManCount', 'totalStaffCount', 'branchIncome', 'courierInfoCount', 'courierInfos', 'emptyMessage'));
     }
 
     public function branchList()

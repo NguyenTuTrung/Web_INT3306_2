@@ -20,15 +20,13 @@ class CourierController extends Controller
     public function create()
     {
         $pageTitle = "Courier Send";
-        $branchs = Branch::where('status', 1)->latest()->get();
         $types = Type::where('status', 1)->with('unit')->latest()->get();
-        return view('staff.courier', compact('pageTitle', 'branchs', 'types'));
+        return view('staff.courier', compact('pageTitle', 'types'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'branch' => 'required|exists:branches,id',
             'sender_name' => 'required|max:40',
             'sender_email' => 'required|email|max:40',
             'sender_phone' => 'required|string|max:40',
@@ -47,6 +45,7 @@ class CourierController extends Controller
         $courier->invoice_id = getTrx();
         $courier->code = getTrx();
         $courier->sender_branch_id = $sender->branch_id;
+        $courier->sender_warehouse_id = Branch::where('id', $sender->branch_id)->latest()->first()->warehouse_id;
         $courier->sender_staff_id = $sender->id;
         $courier->sender_name = $request->sender_name;
         $courier->sender_email = $request->sender_email;
@@ -155,6 +154,15 @@ class CourierController extends Controller
         $emptyMessage = "No data found";
         $courierDeliveys = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
         return view('staff.courier.delivery', compact('pageTitle', 'emptyMessage', 'courierDeliveys'));
+    }
+
+    public function dispatching()   
+    {
+        $user = Auth::user();
+        $pageTitle = "Courier Dispatch List";
+        $emptyMessage = "No data found";
+        $courierDispatchs = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('staff.courier.dispatch', compact('pageTitle', 'emptyMessage', 'courierDispatchs'));
     }
 
 
