@@ -26,12 +26,12 @@ class HomeController extends Controller
         $manager = Auth::user();
         $pageTitle = "Manager Dashboard";
         $emptyMessage = "No data found";
-        $branchListCount = Branch::where('status', 1)->count();
+        $totalDeliveryManCount = User::where('user_type', 'delivery_man')->where('branch_id', $manager->branch_id)->count();
         $totalStaffCount = User::where('user_type', 'staff')->where('branch_id', $manager->branch_id)->count();
         $branchIncome = CourierPayment::where('branch_id', $manager->branch_id)->sum('amount');
         $courierInfoCount = CourierInfo::where('receiver_branch_id', $manager->branch_id)->orWhere('sender_branch_id', $manager->branch_id)->count();
-        $courierInfos = CourierInfo::where('receiver_branch_id', $manager->branch_id)->orWhere('sender_branch_id', $manager->branch_id)->orderBy('id', 'DESC')->take(5)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->get();
-        return view('manager.dashboard', compact('pageTitle', 'branchListCount', 'totalStaffCount', 'branchIncome', 'courierInfoCount', 'courierInfos', 'emptyMessage'));
+        $courierInfos = CourierInfo::where('receiver_branch_id', $manager->branch_id)->orWhere('sender_branch_id', $manager->branch_id)->orderBy('id', 'DESC')->take(5)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->get();
+        return view('manager.dashboard', compact('pageTitle', 'totalDeliveryManCount', 'totalStaffCount', 'branchIncome', 'courierInfoCount', 'courierInfos', 'emptyMessage'));
     }
 
     public function branchList()
@@ -117,7 +117,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "All Courier List";
         $emptyMessage = "No data found";
-        $courierInfos = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo','senderStaffBranch')->paginate(getPaginate());
         return view('manager.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
     }
 
@@ -126,7 +126,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Dispatch Courier List";
         $emptyMessage = "No data found";
-        $courierInfos = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('manager.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
     }
 
@@ -136,7 +136,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Upcoming Courier List";
         $emptyMessage = "No data found";
-        $courierInfos = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('manager.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
     }
 
@@ -215,16 +215,4 @@ class HomeController extends Controller
                     ->groupBy('date')->orderby('id', 'DESC')->paginate(getPaginate());
         return view('manager.courier.income', compact('pageTitle', 'emptyMessage', 'branchIncomes'));
     }
-
-    public function show2faForm()
-    {
-        $general = GeneralSetting::first();
-        $ga = new GoogleAuthenticator();
-        $user = auth()->user();
-        $secret = $ga->createSecret();
-        $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->username . '@' . $general->sitename, $secret);
-        $pageTitle = 'Two Factor';
-        return view('manager.twofactor', compact('pageTitle', 'secret', 'qrCodeUrl'));
-    }
-
 }

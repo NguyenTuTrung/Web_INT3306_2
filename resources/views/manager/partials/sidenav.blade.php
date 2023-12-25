@@ -83,6 +83,30 @@
                     </div>
                 </li>
 
+                <li class="sidebar-menu-item sidebar-dropdown">
+                    <a href="javascript:void(0)" class="{{menuActive('manager.delivery_man*',3)}}">
+                        <i class="menu-icon las la-user"></i>
+                        <span class="menu-title">@lang('Delivery Man')</span>
+                    </a>
+                    <div class="sidebar-submenu {{menuActive('manager.delivery_man*',2)}}">
+                        <ul>
+                            <li class="sidebar-menu-item {{menuActive('manager.delivery_man.create')}}">
+                                <a href="{{route('manager.delivery_man.create')}}" class="nav-link">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Add New')</span>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-menu-item {{menuActive('manager.delivery_man.index')}}">
+                                <a href="{{route('manager.delivery_man.index')}}" class="nav-link">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('All Delivery Man')</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li class="sidebar-menu-item {{menuActive('manager.income.courier')}}">
                     <a href="{{route('manager.income.courier')}}" class="nav-link"
                        data-default-url="{{ route('manager.income.courier') }}">

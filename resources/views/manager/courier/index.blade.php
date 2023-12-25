@@ -22,22 +22,24 @@
                             <tr>
                                 <td data-label="@lang('Sender Branch')">
                                     <span>{{__($courierInfo->senderBranch->name)}}</span><br>
-                                    <a href="{{route('manager.staff.edit', encrypt($courierInfo->senderStaff->id))}}"><span>@</span>{{__($courierInfo->senderStaff->username)}}</a>
+                                    <a href="{{route('manager.staff.edit', encrypt($courierInfo->senderStaffBranch->id))}}"><span>@</span>{{__($courierInfo->senderStaffBranch->username)}}</a>
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
-                                    <span>
-                                        @if($courierInfo->receiver_branch_id)
-                                            {{__($courierInfo->receiverBranch->name)}}
+                                    @if($courierInfo->status == 6)
+                                        <span>
+                                            @if($courierInfo->receiver_branch_id)
+                                                {{__($courierInfo->receiverBranch->name)}}
+                                            @else
+                                                @lang('')
+                                            @endif
+                                        </span>
+                                        <br>
+                                        @if($courierInfo->receiver_staff_id)
+                                            <a href="{{route('manager.staff.edit', encrypt($courierInfo->receiverStaff->id))}}"><span>@</span>{{__($courierInfo->receiverStaff->username)}}</a>
                                         @else
-                                            @lang('N/A')
+                                            <span>@lang('')</span>
                                         @endif
-                                    </span>
-                                    <br>
-                                    @if($courierInfo->receiver_staff_id)
-                                        <a href="{{route('manager.staff.edit', encrypt($courierInfo->receiverStaff->id))}}"><span>@</span>{{__($courierInfo->receiverStaff->username)}}</a>
-                                    @else
-                                        <span>@lang('N/A')</span>
                                     @endif
                                 </td>
 

@@ -18,7 +18,11 @@
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Branch/Warehouse')
-                            <span class="font-weight-bold">{{__($courierInfo->senderWarehouse->name)}}</span>
+                            @if($courierInfo->sender_branch_id != 0 && $courierInfo->sender_warehouse_id == 0)
+                                <span class="font-weight-bold">{{__($courierInfo->senderBranch->name)}}</span><br>
+                            @elseif($courierInfo->sender_branch_id != 0 && $courierInfo->sender_warehouse_id != 0)
+                                <span class="font-weight-bold">{{__($courierInfo->senderBranch->name)}}</span><br>
+                            @endif
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -33,7 +37,7 @@
                 </div>
             </div>
 
-            @if($courierInfo->receiver_staff_id)
+            @if($courierInfo->receiver_staff_id && $courierInfo->status == 6)
                 <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
                     <div class="card-body">
                         <h5 class="mb-20 text-muted">@lang('Receiver Staff')</h5>
@@ -49,8 +53,8 @@
                             </li>
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @lang('Warehouse')
-                                <span class="font-weight-bold">{{__($courierInfo->receiverWarehouse->name)}}</span>
+                                @lang('Branch')
+                                <span class="font-weight-bold">{{__($courierInfo->receiverBranch->name)}}</span>
                             </li>
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -133,7 +137,17 @@
                                     @if($courierInfo->status == 0)
                                         <span class="badge badge--primary">@lang('Received')</span>
                                     @elseif($courierInfo->status == 1)
-                                        <span class="badge badge--success">@lang('Delivery')</span>
+                                        <span class="badge badge--primary">@lang('Sent Warehouse')</span>
+                                    @elseif($courierInfo->status == 2)
+                                        <span class="badge badge--primary">@lang('Received Warehouse')</span>
+                                    @elseif($courierInfo->status == 3)
+                                        <span class="badge badge--primary">@lang('Received Branch')</span>
+                                    @elseif($courierInfo->status == 4)
+                                        <span class="badge badge--primary">@lang('Delivery')</span>
+                                    @elseif($courierInfo->status == 5)
+                                        <span class="badge badge--success">@lang('Successful')</span>
+                                    @elseif($courierInfo->status == 6)
+                                        <span class="badge badge--danger">@lang('Missed')</span>
                                     @endif
                                 </li>
                             </ul>
@@ -189,7 +203,7 @@
                                     @endif
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold">
-                                  @lang('Receiver Warehouse')
+                                  @lang('Receiver Branch')
                                     @if(!empty($courierInfo->paymentInfo->branch_id))
                                         <span>{{__($courierInfo->paymentInfo->brach->name)}}</span>
                                     @else

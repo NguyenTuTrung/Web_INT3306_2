@@ -28,13 +28,13 @@
                                         @if($courierInfo->receiver_branch_id)
                                             <span class="font-weight-bold">{{__($courierInfo->receiverBranch->name)}}</span>
                                         @else
-                                            @lang('N/A')
+                                            @lang('')
                                         @endif
                                         <br>
                                         @if($courierInfo->receiver_staff_id)
                                             {{__($courierInfo->receiverStaff->fullname)}}
                                         @else
-                                            <span>@lang('N/A')</span>
+                                            <span>@lang('')</span>
                                         @endif
                                     </td>
 

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\AdminNotification;
 use App\Models\Frontend;
 use App\Models\GeneralSetting;
 use App\Models\Language;
@@ -48,12 +47,6 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('admin.partials.sidenav', function ($view) {
             $view->with([
                 'pending_ticket_count'         => SupportTicket::whereIN('status', [0,2])->count(),
-            ]);
-        });
-
-        view()->composer('admin.partials.topnav', function ($view) {
-            $view->with([
-                'adminNotifications'=>AdminNotification::where('read_status',0)->with('user')->orderBy('id','desc')->get(),
             ]);
         });
 

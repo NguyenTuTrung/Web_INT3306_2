@@ -28,44 +28,7 @@
                     <i class="las la-search"></i>
                 </button>
             </li>
-
-
-            <li class="dropdown">
-                <button type="button" class="primary--layer" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
-                  <i class="las la-bell text--primary"></i>
-                  @if($adminNotifications->count() > 0)
-                    <span class="pulse--primary"></span>
-                  @endif
-                </button>
-                <div class="dropdown-menu dropdown-menu--md p-0 border-0 box--shadow1 dropdown-menu-right">
-                  <div class="dropdown-menu__header">
-                    <span class="caption">@lang('Notification')</span>
-                    @if($adminNotifications->count() > 0)
-                        <p>@lang('You have') {{ $adminNotifications->count() }} @lang('unread notification')</p>
-                    @else
-                        <p>@lang('No unread notification found')</p>
-                    @endif
-                  </div>
-                  <div class="dropdown-menu__body">
-                    @foreach($adminNotifications as $notification)
-                    <a href="{{ route('admin.notification.read',$notification->id) }}" class="dropdown-menu__item">
-                      <div class="navbar-notifi">
-                        <div class="navbar-notifi__left bg--green b-radius--rounded"><img src="{{ getImage(imagePath()['profile']['user']['path'].'/'.@$notification->user->image,imagePath()['profile']['user']['size'])}}" alt="@lang('Profile Image')"></div>
-                        <div class="navbar-notifi__right">
-                          <h6 class="notifi__title">{{ __($notification->title) }}</h6>
-                          <span class="time"><i class="far fa-clock"></i> {{ $notification->created_at->diffForHumans() }}</span>
-                        </div>
-                      </div><!-- navbar-notifi end -->
-                    </a>
-                    @endforeach
-                  </div>
-                  <div class="dropdown-menu__footer">
-                    <a href="{{ route('admin.notifications') }}" class="view-all-message">@lang('View all notification')</a>
-                  </div>
-                </div>
-            </li>
-
-
+            
             <li class="dropdown">
                 <button type="button" class="" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                   <span class="navbar-user">

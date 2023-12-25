@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdminNotification;
 use App\Models\SupportAttachment;
 use App\Models\SupportMessage;
 use App\Models\SupportTicket;
@@ -27,6 +26,12 @@ class TicketController extends Controller
         elseif($user->user_type == "manager"){
             return view('manager.support.index', compact('supports', 'pageTitle', 'emptyMessage'));
         }
+        elseif($user->user_type == "staff_warehouse"){
+            return view('staff_warehouse.support.index', compact('supports', 'pageTitle', 'emptyMessage'));
+        }
+        elseif($user->user_type == "manager_warehouse"){
+            return view('manager_warehouse.support.index', compact('supports', 'pageTitle', 'emptyMessage'));
+        }
     }
 
 
@@ -42,6 +47,12 @@ class TicketController extends Controller
         }
         elseif($user->user_type == "manager"){
             return view('manager.support.create', compact('pageTitle', 'user'));
+        }
+        elseif($user->user_type == "staff_warehouse"){
+            return view('staff_warehouse.support.create', compact('pageTitle','user'));
+        }
+        elseif($user->user_type == "manager_warehouse"){
+            return view('manager_warehouse.support.create', compact('pageTitle', 'user'));
         }
     }
 
@@ -95,13 +106,6 @@ class TicketController extends Controller
         $message->save();
 
 
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'New support ticket has opened';
-        $adminNotification->click_url = urlPath('admin.ticket.view',$ticket->id);
-        $adminNotification->save();
-
-
         $path = imagePath()['ticket']['path'];
         if ($request->hasFile('attachments')) {
             foreach ($files as  $file) {
@@ -136,6 +140,12 @@ class TicketController extends Controller
             }
             elseif($user->user_type == "manager"){
                 return view('manager.support.view', compact('my_ticket', 'messages', 'pageTitle', 'user'));
+            }
+            elseif($user->user_type == "staff_warehouse"){
+                return view('staff_warehouse.support.view', compact('my_ticket', 'messages', 'pageTitle', 'user'));
+            }
+            elseif($user->user_type == "manager_warehouse"){
+                return view('manager_warehouse.support.view', compact('my_ticket', 'messages', 'pageTitle', 'user'));
             }
         }
         else{

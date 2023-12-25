@@ -102,14 +102,14 @@
                                         @if($courierInfo->receiver_branch_id)
                                             {{__($courierInfo->receiverBranch->name)}}
                                         @else
-                                            @lang('N/A')
+                                            @lang('')
                                         @endif
                                     </span>
                                     <br>
                                     @if($courierInfo->receiver_staff_id)
                                         <a href="{{route('manager_warehouse.staff.edit', encrypt($courierInfo->receiverStaff->id))}}"><span>@</span>{{__($courierInfo->receiverStaff->username)}}</a>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </td>
 
@@ -137,10 +137,6 @@
                                     @elseif($courierInfo->status == 1)
                                         <span class="badge badge--success">@lang('Delivery')</span>
                                     @endif
-                                </td>
-                            
-                                <td data-label="@lang('Action')">
-                                   <a href="{{route('manager_warehouse.courier.invoice', $courierInfo->id)}}" title="" class="icon-btn btn--info">@lang('Invoice')</a>
                                 </td>
                             </tr>
                         @empty

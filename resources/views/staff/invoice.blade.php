@@ -49,7 +49,9 @@
                          @endif
                     <br>
                     <b>@lang('Sender At Branch'):</b> {{__($courierInfo->senderBranch->name)}}<br>
-                    <b>@lang('Received At Branch'):</b> {{__($courierInfo->receiverBranch->name)}}
+                    @if($courierInfo->status == 6)
+                        <b>@lang('Receiver At Branch'):</b> {{__($courierInfo->receiverBranch->name)}}<br>
+                    @endif
                 </div>
             </div>
 

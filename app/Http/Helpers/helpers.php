@@ -706,24 +706,6 @@ function gatewayRedirectUrl($type = false){
     }
 }
 
-function verifyG2fa($user,$code,$secret = null)
-{
-    $ga = new GoogleAuthenticator();
-    if (!$secret) {
-        $secret = $user->tsc;
-    }
-    $oneCode = $ga->getCode($secret);
-    $userCode = $code;
-    if ($oneCode == $userCode) {
-        $user->tv = 1;
-        $user->save();
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
 function urlPath($routeName,$routeParam=null){
     if($routeParam == null){
         $url = route($routeName);

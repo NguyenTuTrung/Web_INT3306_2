@@ -33,7 +33,6 @@ Route::namespace('Auth')->group(function () {
     Route::post('password/reset', 'ResetPasswordController@reset')->name('password.update');
     Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
     Route::post('password/verify-code', 'ForgotPasswordController@verifyCode')->name('password.verify.code');
-
 });
 
 
@@ -55,11 +54,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('profile', 'AdminController@profileUpdate')->name('profile.update');
         Route::get('password', 'AdminController@password')->name('password');
         Route::post('password', 'AdminController@passwordUpdate')->name('password.update');
-
-        //Notification
-        Route::get('notifications','AdminController@notifications')->name('notifications');
-        Route::get('notification/read/{id}','AdminController@notificationRead')->name('notification.read');
-        Route::get('notifications/read-all','AdminController@readAll')->name('notifications.readAll');
 
         // Branch
         Route::get('branch/list', 'BranchController@index')->name('branch.index');
@@ -140,10 +134,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('setting/logo-icon', 'GeneralSettingController@logoIcon')->name('setting.logo.icon');
         Route::post('setting/logo-icon', 'GeneralSettingController@logoIconUpdate')->name('setting.logo.icon');
 
-        //Cookie
-        Route::get('cookie','GeneralSettingController@cookie')->name('setting.cookie');
-        Route::post('cookie','GeneralSettingController@cookieSubmit');
-
         // Email Setting
         Route::get('email-template/global', 'EmailTemplateController@emailTemplate')->name('email.template.global');
         Route::post('email-template/global', 'EmailTemplateController@emailTemplateUpdate')->name('email.template.global');
@@ -197,7 +187,7 @@ Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function
                 Route::get('profile', 'HomeController@profile')->name('profile');
                 Route::post('profile/update', 'HomeController@profileUpdate')->name('profile.update');
                 Route::get('password', 'HomeController@password')->name('password');
-                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
+                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update');
 
                 Route::get('branch/list', 'HomeController@branchList')->name('branch.index');
                 Route::get('branch/search', 'HomeController@branchSearch')->name('branch.search');
@@ -218,6 +208,14 @@ Route::namespace('Manager')->name('manager.')->prefix('manager')->group(function
                 Route::get('staff/edit/{id}', 'StaffController@edit')->name('staff.edit');
                 Route::post('staff/update/{id}', 'StaffController@update')->name('staff.update');
                 Route::get('staff/search/', 'StaffController@search')->name('staff.search');
+
+                //Manage Delivery Man
+                Route::get('delivery_man/create', 'DeliveryManController@create')->name('delivery_man.create');
+                Route::get('delivery_man/list', 'DeliveryManController@index')->name('delivery_man.index');
+                Route::post('delivery_man/store', 'DeliveryManController@store')->name('delivery_man.store');
+                Route::get('delivery_man/edit/{id}', 'DeliveryManController@edit')->name('delivery_man.edit');
+                Route::post('delivery_man/update/{id}', 'DeliveryManController@update')->name('delivery_man.update');
+                Route::get('delivery_man/search/', 'DeliveryManController@search')->name('delivery_man.search');
             });
         });
     });
@@ -284,12 +282,15 @@ Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
                 Route::get('courier/send', 'CourierController@create')->name('courier.create');
                 Route::post('courier/store', 'CourierController@store')->name('courier.store');
                 Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
+                Route::get('courier/dispatch/list', 'CourierController@dispatching')->name('dispatch.list');
                 Route::get('courier/delivery/list', 'CourierController@delivery')->name('delivery.list');
                 Route::get('courier/details/{id}', 'CourierController@details')->name('courier.details');
                 Route::post('courier/payment', 'CourierController@payment')->name('courier.payment');
                 Route::post('courier/delivery/store', 'CourierController@deliveryStore')->name('courier.delivery');
                 Route::get('courier/cash/collection', 'CourierController@cash')->name('cash.income');
                 Route::get('courier/list', 'CourierController@manageCourierList')->name('courier.list');
+                Route::get('courier/send/warehouse', 'CourierController@sendWarehouse')->name('courier.send.warehouse');
+                Route::post('courier/send/warehouse/store', 'CourierController@storeWarehouse')->name('courier.send.warehouse.store');
                 Route::get('courier/date/search', 'CourierController@courierDateSearch')->name('courier.date.search');
                 Route::get('courier/search', 'CourierController@courierSearch')->name('courier.search');
             });
@@ -321,11 +322,10 @@ Route::namespace('Staff_Warehouse')->name('staff_warehouse.')->prefix('staff_war
                 Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
                 Route::post('courier/payment', 'CourierController@payment')->name('courier.payment');
                 Route::get('courier/delivery/list', 'CourierController@delivery')->name('delivery.list');
-                Route::post('courier/delivery/store', 'CourierController@deliveryStore')->name('courier.delivery');
+                Route::post('courier/confirm/store', 'CourierController@confirmStore')->name('courier.confirm');
                 Route::get('courier/cash/collection', 'CourierController@cash')->name('cash.income');
                 Route::get('courier/date/search', 'CourierController@courierDateSearch')->name('courier.date.search');
                 Route::get('courier/search', 'CourierController@courierSearch')->name('courier.search');
-
             });
         });
     });

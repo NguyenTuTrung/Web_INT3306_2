@@ -23,22 +23,24 @@
                                 <tr>
                                     <td data-label="@lang('Sender Branch')">
                                     <span>{{__($courierInfo->senderBranch->name)}}</span><br>
-                                    {{__($courierInfo->senderStaff->fullname)}}
+                                    {{__($courierInfo->senderStaffBranch->fullname)}}
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
-                                    <span>
-                                        @if($courierInfo->receiver_branch_id)
-                                            {{__($courierInfo->receiverBranch->name)}}
+                                    @if($courierInfo->status == 6)
+                                        <span>
+                                            @if($courierInfo->receiver_branch_id)
+                                                {{__($courierInfo->receiverBranch->name)}}
+                                            @else
+                                                @lang('')
+                                            @endif
+                                        </span>
+                                        <br>
+                                        @if($courierInfo->receiver_staff_id)
+                                            {{__($courierInfo->receiverStaff->fullname)}}
                                         @else
-                                            @lang('N/A')
+                                            <span>@lang('')</span>
                                         @endif
-                                    </span>
-                                    <br>
-                                    @if($courierInfo->receiver_staff_id)
-                                        {{__($courierInfo->receiverStaff->fullname)}}
-                                    @else
-                                        <span>@lang('N/A')</span>
                                     @endif
                                 </td>
 

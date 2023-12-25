@@ -8,12 +8,12 @@
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Fullname')
-                            <span class="font-weight-bold">{{__($courierInfo->senderStaff->fullname)}}</span>
+                            <span class="font-weight-bold">{{__($courierInfo->senderStaffBranch->fullname)}}</span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Email')
-                            <span class="font-weight-bold">{{__($courierInfo->senderStaff->email)}}</span>
+                            <span class="font-weight-bold">{{__($courierInfo->senderStaffBranch->email)}}</span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -23,9 +23,9 @@
 
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Status')
-                            @if($courierInfo->senderStaff->status == 1)
+                            @if($courierInfo->senderStaffBranch->status == 1)
                                 <span class="badge badge-pill bg--success">@lang('Active')</span>
-                            @elseif($courierInfo->senderStaff->status == 0)
+                            @elseif($courierInfo->senderStaffBranch->status == 0)
                                 <span class="badge badge-pill bg--danger">@lang('Banned')</span>
                             @endif
                         </li>
@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            @if($courierInfo->receiver_staff_id)
+            @if($courierInfo->receiver_staff_id && $courierInfo->status == 6)
                 <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
                     <div class="card-body">
                         <h5 class="mb-20 text-muted">@lang('Receiver Staff')</h5>
@@ -185,7 +185,7 @@
                                     @if(!empty($courierInfo->paymentInfo->receiver_id))
                                         <span>{{__($courierInfo->paymentInfo->receiver->username)}}</span>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold">
@@ -193,7 +193,7 @@
                                     @if(!empty($courierInfo->paymentInfo->branch_id))
                                         <span>{{__($courierInfo->paymentInfo->brach->name)}}</span>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold">
@@ -201,7 +201,7 @@
                                     @if(!empty($courierInfo->paymentInfo->date))
                                         <span>{{showDateTime($courierInfo->paymentInfo->date, 'd M Y')}}</span>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </li>
 

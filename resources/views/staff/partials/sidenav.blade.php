@@ -18,6 +18,15 @@
                         <span class="menu-title">@lang('Dashboard')</span>
                     </a>
                 </li>
+
+                <li class="sidebar-menu-item">
+                    <a href="" class="nav-link"
+                       data-default-url="">
+                        <i class="menu-icon las la-user"></i>
+                        <span class="menu-title">@lang('Courier Forward')</span>
+                    </a>
+                </li>
+
                 
                 <li class="sidebar-menu-item {{menuActive('staff.courier.create')}}">
                     <a href="{{route('staff.courier.create')}}" class="nav-link"
@@ -27,12 +36,28 @@
                     </a>
                 </li>
 
+                <li class="sidebar-menu-item {{menuActive('staff.courier.send.warehouse')}}">
+                    <a href="{{route('staff.courier.send.warehouse')}}" class="nav-link"
+                       data-default-url="{{ route('staff.courier.send.warehouse') }}">
+                        <i class="menu-icon las la-chevron-right"></i>
+                        <span class="menu-title">@lang('Send Warehouse')</span>
+                    </a>
+                </li>
 
-                 <li class="sidebar-menu-item {{menuActive('staff.courier*')}}">
+
+                 <li class="sidebar-menu-item {{menuActive('staff.courier.list')}}">
                     <a href="{{route('staff.courier.list')}}" class="nav-link"
                        data-default-url="{{ route('staff.courier.list') }}">
                         <i class="menu-icon las la-share"></i>
                         <span class="menu-title">@lang('Manage Courier')</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu-item {{menuActive('staff.dispatch.list')}}">
+                    <a href="{{route('staff.dispatch.list')}}" class="nav-link"
+                       data-default-url="{{ route('staff.dispatch.list') }}">
+                        <i class="menu-icon las la-truck"></i>
+                        <span class="menu-title">@lang('Dispatching Courier')</span>
                     </a>
                 </li>
 

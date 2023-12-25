@@ -8,7 +8,7 @@ use App\Models\Branch;
 use App\Models\Type;
 use DNS1D;
 use App\Models\CourierInfo;
-use App\Models\AdminNotification;
+use App\Models\User;
 use Carbon\Carbon;
 use App\Models\CourierProduct;
 use App\Models\CourierPayment;
@@ -20,15 +20,13 @@ class CourierController extends Controller
     public function create()
     {
         $pageTitle = "Courier Send";
-        $branchs = Branch::where('status', 1)->latest()->get();
         $types = Type::where('status', 1)->with('unit')->latest()->get();
-        return view('staff.courier', compact('pageTitle', 'branchs', 'types'));
+        return view('staff.courier', compact('pageTitle', 'types'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'branch' => 'required|exists:branches,id',
             'sender_name' => 'required|max:40',
             'sender_email' => 'required|email|max:40',
             'sender_phone' => 'required|string|max:40',
@@ -47,6 +45,7 @@ class CourierController extends Controller
         $courier->invoice_id = getTrx();
         $courier->code = getTrx();
         $courier->sender_branch_id = $sender->branch_id;
+        $courier->sender_staff_branch = $sender->id;
         $courier->sender_staff_id = $sender->id;
         $courier->sender_name = $request->sender_name;
         $courier->sender_email = $request->sender_email;
@@ -77,13 +76,6 @@ class CourierController extends Controller
         $courierPayment->status = 0;
         $courierPayment->save();
 
-
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $sender->id;
-        $adminNotification->title = 'Dispatch Courier '.$sender->username;
-        $adminNotification->click_url = urlPath('admin.courier.info.details',$courier->id);
-        $adminNotification->save();
-
         $notify[]=['success','Courier created successfully'];
         return redirect()->route('staff.courier.invoice', encrypt($courier->id))->withNotify($notify);
     }
@@ -105,7 +97,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "All Courier List";
         $emptyMessage = "No data found";
-        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('staff.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
@@ -153,10 +145,18 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "Courier Delivery List";
         $emptyMessage = "No data found";
-        $courierDeliveys = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierDeliveys = CourierInfo::where('receiver_branch_id', $user->branch_id)->where('status', 5)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('staff.courier.delivery', compact('pageTitle', 'emptyMessage', 'courierDeliveys'));
     }
 
+    public function dispatching()   
+    {
+        $user = Auth::user();
+        $pageTitle = "Courier Dispatch List";
+        $emptyMessage = "No data found";
+        $courierDispatchs = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
+        return view('staff.courier.dispatch', compact('pageTitle', 'emptyMessage', 'courierDispatchs'));
+    }
 
     public function details($id)
     {
@@ -180,11 +180,6 @@ class CourierController extends Controller
         $courierPayment->status = 1;
         $courierPayment->save();
 
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'Courier Payment '.$user->username;
-        $adminNotification->click_url = urlPath('admin.courier.info.details',$courier->id);
-        $adminNotification->save();
         $notify[] =  ['success', 'Payment completed'];
         return back()->withNotify($notify);
     }
@@ -195,19 +190,12 @@ class CourierController extends Controller
             'code' => 'required|exists:courier_infos,code'
         ]);
         $user = Auth::user();
-        $courier = CourierInfo::where('code', $request->code)->where('status', 0)->firstOrFail();
+        $courier = CourierInfo::where('code', $request->code)->where('status', 5)->firstOrFail();
         $courier->receiver_staff_id = $user->id;
-        $courier->status = 1;
+        $courier->status = 6;
         $courier->save();
 
-
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'Courier Delivery '.$user->username;
-        $adminNotification->click_url = urlPath('admin.courier.info.details',$courier->id);
-        $adminNotification->save();
-
-        $notify[] =  ['success', 'Delivery completed'];
+        $notify[] =  ['success', 'Confirm completed'];
         return back()->withNotify($notify);
     }
 
@@ -221,5 +209,28 @@ class CourierController extends Controller
                     ->select(DB::raw("*,SUM(amount) as totalAmount"))
                     ->groupBy('date')->paginate(getPaginate());
         return view('staff.courier.cash', compact('pageTitle', 'emptyMessage', 'branchIncomeLists'));
+    }
+
+    public function sendWarehouse()
+    {
+        $user = Auth::user();
+        $pageTitle = "Send Warehouse";
+        $emptyMessage = "No data found";
+        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->where('status',0)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('staff.courier.warehouse', compact('pageTitle', 'emptyMessage', 'courierLists'));
+    }
+
+    public function storeWarehouse(Request $request)
+    {
+        for($i=0; $i<count($request->couriers); $i++)
+        {
+            $courierInfos = CourierInfo::where('id', $request->couriers[$i])->where('status', 0)->firstOrFail();
+            $courierInfos->receiver_warehouse_id = Branch::where('id', Auth::user()->branch_id)->latest()->first()->warehouse_id;;
+            $courierInfos->status = $courierInfos->status + 1;
+            $courierInfos->save();
+        }
+
+        $notify[]=['success','Courier sent warehouse successfully'];
+        return redirect()->route('staff.courier.send.warehouse')->withNotify($notify);
     }
 }

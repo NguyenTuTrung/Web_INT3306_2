@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\AdminNotification;
 use App\Models\Frontend;
 use App\Models\Language;
 use App\Models\Page;
@@ -92,12 +91,6 @@ class SiteController extends Controller
         $ticket->last_reply = Carbon::now();
         $ticket->status = 0;
         $ticket->save();
-
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = auth()->user() ? auth()->user()->id : 0;
-        $adminNotification->title = 'A new support ticket has opened ';
-        $adminNotification->click_url = urlPath('admin.ticket.view',$ticket->id);
-        $adminNotification->save();
 
         $message = new SupportMessage();
         $message->supportticket_id = $ticket->id;

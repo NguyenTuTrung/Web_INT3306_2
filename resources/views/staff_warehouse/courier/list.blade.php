@@ -21,24 +21,30 @@
                         @forelse($courierLists as $courierInfo)
                             <tr>
                                 <tr>
-                                    <td data-label="@lang('Sender Branch')">
-                                    <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
+                                    <td data-label="@lang('Sender Warehouse/Branch - Staff')">
+                                    @if($courierInfo->sender_branch_id != 0 && $courierInfo->sender_warehouse_id == 0)
+                                        <span>{{__($courierInfo->senderBranch->name)}}</span><br>
+                                    @elseif($courierInfo->sender_branch_id != 0 && $courierInfo->sender_warehouse_id != 0)
+                                        <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
+                                    @endif
                                     {{__($courierInfo->senderStaff->fullname)}}
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
-                                    <span>
+                                    @if($courierInfo->status == 4)
+                                        <span>
+                                            @if($courierInfo->receiver_staff_id)
+                                                {{__($courierInfo->receiverWarehouse->name)}}
+                                            @else
+                                                @lang('')
+                                            @endif
+                                        </span>
+                                        <br>
                                         @if($courierInfo->receiver_staff_id)
-                                            {{__($courierInfo->receiverWarehouse->name)}}
+                                            {{__($courierInfo->receiverStaff->fullname)}}
                                         @else
-                                            @lang('N/A')
+                                            <span>@lang('')</span>
                                         @endif
-                                    </span>
-                                    <br>
-                                    @if($courierInfo->receiver_staff_id)
-                                        {{__($courierInfo->receiverStaff->fullname)}}
-                                    @else
-                                        <span>@lang('N/A')</span>
                                     @endif
                                 </td>
 
@@ -63,11 +69,24 @@
                                     @if($courierInfo->status == 0)
                                         <span class="badge badge--primary">@lang('Received')</span>
                                     @elseif($courierInfo->status == 1)
-                                        <span class="badge badge--success">@lang('Delivery')</span>
+                                        <span class="badge badge--primary">@lang('Sent Warehouse')</span>
+                                    @elseif($courierInfo->status == 2)
+                                        <span class="badge badge--primary">@lang('Received Warehouse')</span>
+                                    @elseif($courierInfo->status == 3)
+                                        <span class="badge badge--primary">@lang('Received Branch')</span>
+                                    @elseif($courierInfo->status == 4)
+                                        <span class="badge badge--primary">@lang('Delivery')</span>
+                                    @elseif($courierInfo->status == 5)
+                                        <span class="badge badge--success">@lang('Successful')</span>
+                                    @elseif($courierInfo->status == 6)
+                                        <span class="badge badge--danger">@lang('Missed')</span>
                                     @endif
                                 </td>
                             
                                 <td data-label="@lang('Action')">
+                                    @if($courierInfo->status  == 0)
+                                        <a href="javascript:void(0)" title="" class="icon-btn btn--success ml-1 confirm" data-code="{{$courierInfo->code}}">@lang('Confirm')</a>
+                                    @endif
                                    <a href="{{route('staff_warehouse.courier.invoice', encrypt($courierInfo->id))}}" title="" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
                                    <a href="{{route('staff_warehouse.courier.details', encrypt($courierInfo->id))}}" title="" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
                                 </td>
@@ -85,6 +104,32 @@
             <div class="card-footer py-4">
                 {{ paginateLinks($courierLists) }}
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Confirmation')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            
+            <form action="{{route('staff_warehouse.courier.confirm')}}" method="POST">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="code">
+                <div class="modal-body">
+                    <p>@lang('Are you sure to confirm this courier has arrived at the warehouse?')</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--secondary" data-dismiss="modal">@lang('Close')</button>
+                    <button type="submit" class="btn btn--success">@lang('Confirm')</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -119,12 +164,21 @@
 @endpush
 
 @push('script')
-  <script>
-    (function($){
-        "use strict";
-        if(!$('.datepicker-here').val()){
-            $('.datepicker-here').datepicker();
-        }
-    })(jQuery)
-  </script>
+<script>
+  (function($){
+      "use strict";
+      if(!$('.datepicker-here').val()){
+          $('.datepicker-here').datepicker();
+      }
+  })(jQuery)
+</script>
+
+<script>
+    'use strict';
+    $('.confirm').on('click', function () {
+        var modal = $('#confirmBy');
+        modal.find('input[name=code]').val($(this).data('code'))
+        modal.modal('show');
+    });
+</script>
 @endpush

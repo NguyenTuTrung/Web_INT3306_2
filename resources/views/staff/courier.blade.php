@@ -47,29 +47,18 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="form-group col-lg-6">
-                                                <label for="=branch" class="form-control-label font-weight-bold">@lang('Select Branch')</label>
-                                                <select class="form-control form-control-lg" name="branch" id="branch" required="">
-                                                    <option value="">@lang('Select One')</option>
-                                                    @foreach($branchs as $branch)
-                                                        <option value="{{$branch->id}}">{{__($branch->name)}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-lg-6">
                                                 <label for="receiver_name" class="form-control-label font-weight-bold">@lang('Name')</label>
                                                 <input type="text" class="form-control form-control-lg" id="receiver_name" name="receiver_name" value="{{old('receiver_name')}}" placeholder="@lang("Enter Receiver Name")"  maxlength="40" required="">
                                             </div>
-                                        </div>
 
-                                        <div class="row">
                                             <div class="form-group col-lg-6">
                                                 <label for="receiver_phone" class="form-control-label font-weight-bold">@lang('Phone')</label>
                                                 <input type="text" class="form-control form-control-lg" id="receiver_phone" name="receiver_phone" placeholder="@lang("Enter Receiver Phone")" value="{{old('receiver_phone')}}" required="">
                                             </div>
+                                        </div>
 
-
-                                            <div class="form-group col-lg-6">
+                                        <div class="row">
+                                            <div class="form-group col-lg-12">
                                                 <label for="receiver_email" class="form-control-label font-weight-bold">@lang('Email')</label>
                                                 <input type="email" class="form-control form-control-lg" id="receiver_email" name="receiver_email" value="{{old('receiver_email')}}" placeholder="@lang("Enter Receiver Email")"  required="">
                                             </div>

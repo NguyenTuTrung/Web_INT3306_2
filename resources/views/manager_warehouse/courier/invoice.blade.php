@@ -49,8 +49,11 @@
                             <span class="badge badge--danger">@lang('Due')</span>
                         @endif
                        <br>
-                    <b>@lang('Sender At Branch'):</b> {{__($courierInfo->senderBranch->name)}}<br>
-                    <b>@lang('Received At Branch'):</b> {{__($courierInfo->receiverBranch->name)}}
+                    @if($courierInfo->senderBranch != null)
+                        <b>@lang('Sender At Branch'):</b> {{__($courierInfo->senderBranch->name)}}<br>
+                    @elseif($courierInfo->receiverBranch != null)
+                        <b>@lang('Received At Branch'):</b> {{__($courierInfo->receiverBranch->name)}}
+                    @endif
                 </div>
             </div>
 
