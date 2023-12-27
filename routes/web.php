@@ -282,6 +282,9 @@ Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
                 //Courier
                 Route::get('courier/send', 'CourierController@create')->name('courier.create');
                 Route::post('courier/store', 'CourierController@store')->name('courier.store');
+                Route::get('courier/forward/create', 'CourierController@forward')->name('courier.forward');
+                Route::get('courier/forward/search', 'CourierController@search')->name('courier.forward.search');
+                Route::post('courier/forward/store', 'CourierController@forward_store')->name('courier.forward.store');
                 Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
                 Route::get('courier/dispatch/list', 'CourierController@dispatching')->name('dispatch.list');
                 Route::get('courier/delivery/list', 'CourierController@delivery')->name('delivery.list');
@@ -333,6 +336,32 @@ Route::namespace('Staff_Warehouse')->name('staff_warehouse.')->prefix('staff_war
     });
 });
 
+Route::namespace('Delivery_Man')->name('delivery_man.')->prefix('delivery_man')->group(function () {
+
+    Route::middleware('auth')->group(function () {
+        Route::middleware(['checkStatus'])->group(function () {
+            Route::middleware('delivery_man')->group(function () {
+                Route::get('dashboard', 'HomeController@dashboard')->name('dashboard');
+                Route::get('profile', 'HomeController@profile')->name('profile');
+                Route::post('profile/update', 'HomeController@profileUpdate')->name('profile.update');
+                Route::get('password', 'HomeController@password')->name('password');
+                Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
+
+                // Manage courier
+                Route::get('courier/list', 'CourierController@index')->name('courier.index');
+                Route::get('courier/successful', 'CourierController@successfulIndex')->name('courier.successful.index');
+                Route::get('courier/mission', 'CourierController@missedIndex')->name('courier.mission');
+                Route::get('courier/return', 'CourierController@returnedIndex')->name('courier.return');
+
+                Route::get('courier/details/{id}', 'CourierController@details')->name('courier.details');
+                Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
+                Route::post('courier/confirm', 'CourierController@confirmDone')->name('courier.confirm');
+                Route::post('courier/confirm/miss', 'CourierController@confirmMiss')->name('courier.confirm.miss');
+            });
+        });
+    });
+});
+
 
 Route::get('/menu/{slug}/{id}', 'SiteController@footerMenu')->name('footer.menu');
 Route::get('/order/tracking', 'SiteController@orderTracking')->name('order.tracking');
@@ -345,6 +374,3 @@ Route::get('blog/{id}/{slug}', 'SiteController@blogDetails')->name('blog.details
 Route::get('placeholder-image/{size}', 'SiteController@placeholderImage')->name('placeholder.image');
 Route::get('/{slug}', 'SiteController@pages')->name('pages');
 Route::get('/', 'SiteController@index')->name('home');
-Route::get('/hello', function () {
-    return 'hello';
-});

@@ -19,9 +19,9 @@
                     </a>
                 </li>
 
-                <li class="sidebar-menu-item">
-                    <a href="" class="nav-link"
-                       data-default-url="">
+                <li class="sidebar-menu-item {{menuActive('staff.courier.forward')}}">
+                    <a href="{{route('staff.courier.forward')}}" class="nav-link"
+                       data-default-url="{{route('staff.courier.forward')}}">
                         <i class="menu-icon las la-user"></i>
                         <span class="menu-title">@lang('Courier Forward')</span>
                     </a>

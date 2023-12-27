@@ -2,6 +2,7 @@
 
 use App\Lib\GoogleAuthenticator;
 use App\Lib\SendSms;
+use App\Models\DeliveryCourier;
 use App\Models\EmailTemplate;
 use App\Models\Extension;
 use App\Models\Frontend;
@@ -715,4 +716,10 @@ function urlPath($routeName,$routeParam=null){
     $basePath = route('home');
     $path = str_replace($basePath,'',$url);
     return $path;
+}
+
+function getStatus($id)
+{
+    $status = DeliveryCourier::where('courier_id',$id)->latest()->first()->status;
+    return $status;
 }

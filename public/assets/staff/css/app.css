@@ -6829,6 +6829,10 @@ a.icon-btn {
     padding: 4.5px 7px;
 }
 
+div.icon-btn {
+    padding: 4.5px 7px;
+}
+
 .icon-btn:hover {
     color: #ffffff;
 }

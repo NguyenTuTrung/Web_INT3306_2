@@ -163,5 +163,8 @@ class LoginController extends Controller
         elseif($user->user_type == 'staff_warehouse') {
             return redirect()->route('staff_warehouse.dashboard');
         }
+        elseif($user->user_type == 'delivery_man') {
+            return redirect()->route('delivery_man.dashboard');
+        }
     }
 }

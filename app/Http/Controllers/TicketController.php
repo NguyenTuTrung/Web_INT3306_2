@@ -32,6 +32,9 @@ class TicketController extends Controller
         elseif($user->user_type == "manager_warehouse"){
             return view('manager_warehouse.support.index', compact('supports', 'pageTitle', 'emptyMessage'));
         }
+        elseif($user->user_type == "delivery_man"){
+            return view('delivery_man.support.index', compact('supports', 'pageTitle', 'emptyMessage'));
+        }
     }
 
 
@@ -53,6 +56,9 @@ class TicketController extends Controller
         }
         elseif($user->user_type == "manager_warehouse"){
             return view('manager_warehouse.support.create', compact('pageTitle', 'user'));
+        }
+        elseif($user->user_type == "delivery_man"){
+            return view('delivery_man.support.create', compact('pageTitle', 'user'));
         }
     }
 
@@ -147,6 +153,9 @@ class TicketController extends Controller
             elseif($user->user_type == "manager_warehouse"){
                 return view('manager_warehouse.support.view', compact('my_ticket', 'messages', 'pageTitle', 'user'));
             }
+            elseif($user->user_type == "delivery_man"){
+                return view('delivery_man.support.view', compact('my_ticket', 'messages', 'pageTitle', 'user'));
+            }
         }
         else{
             return view('templates.basic.ticket', compact('my_ticket', 'messages', 'pageTitle'));
@@ -155,11 +164,7 @@ class TicketController extends Controller
 
     public function replyTicket(Request $request, $id)
     {
-        $userId = 0;
-        if (Auth::user()) {
-            $userId = Auth::id();
-        }
-        $ticket = SupportTicket::where('user_id',$userId)->where('id',$id)->firstOrFail();
+        $ticket = SupportTicket::where('id',$id)->firstOrFail();
         $message = new SupportMessage();
         if ($request->replayTicket == 1) {
             $attachments = $request->file('attachments');

@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Type;
 use DNS1D;
 use App\Models\CourierInfo;
+Use App\Models\DeliveryCourier;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\CourierProduct;
@@ -81,6 +82,45 @@ class CourierController extends Controller
         return redirect()->route('staff.courier.invoice', encrypt($courier->id))->withNotify($notify);
     }
 
+    public function forward(Request $request) 
+    {
+        $pageTitle = "Courier Forward";
+        $delivery_mans = User::where('user_type', 'delivery_man')->where('branch_id', Auth::user()->branch_id)->where('status', 1)->latest()->get();
+        $couriers = CourierInfo::where('status', 6)->where('receiver_branch_id', Auth::user()->branch_id)->orderByRaw('receiver_name COLLATE utf8mb4_vietnamese_ci ASC')->with('paymentInfo')->latest()->get();
+        return view('staff.courier.forward', compact('pageTitle', 'delivery_mans', 'couriers'));
+    }
+
+    public function forward_store(Request $request)
+    {
+        $request->validate([
+            'delivery_man' => 'required|exists:users,id',
+            'receiver_name' => 'required|max:40',
+            'receiver_email' => 'required|email|max:40',
+            'receiver_phone' => 'required|string|max:40',
+            'receiver_address' => 'required|max:255',
+        ]);
+        
+        $couriers = CourierInfo::where('status', 6)->where('receiver_branch_id', Auth::user()->branch_id)
+        ->where('receiver_name', $request->receiver_name)
+        ->where('receiver_email', $request->receiver_email)
+        ->where('receiver_phone', $request->receiver_phone)
+        ->where('receiver_address', $request->receiver_address)
+        ->latest()->get();
+
+        foreach($couriers as $courier)
+        {
+            $courier->status = $courier->status + 1;
+            $courier->save();
+
+            $delivery_courier = new DeliveryCourier();
+            $delivery_courier->user_id = $request->delivery_man;
+            $delivery_courier->courier_id = $courier->id;
+            $delivery_courier->save();
+        }
+
+        $notify[]=['success','Courier forwarded successfully'];
+        return redirect()->route('staff.courier.forward')->withNotify($notify);
+    }
 
     public function invoice($id)
     {
@@ -98,7 +138,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "All Courier List";
         $emptyMessage = "No data found";
-        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch', 'receiverWarehouse')->paginate(getPaginate());
         return view('staff.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
@@ -155,7 +195,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "Courier Dispatch List";
         $emptyMessage = "No data found";
-        $courierDispatchs = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
+        $courierDispatchs = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch', 'receiverWarehouse')->paginate(getPaginate());
         return view('staff.courier.dispatch', compact('pageTitle', 'emptyMessage', 'courierDispatchs'));
     }
 
@@ -233,5 +273,38 @@ class CourierController extends Controller
 
         $notify[]=['success','Courier sent warehouse successfully'];
         return redirect()->route('staff.courier.send.warehouse')->withNotify($notify);
+    }
+
+    public function search(Request $request)
+    {
+        $output = '';
+        $couriers = CourierInfo::where('status', 6)
+        ->where('receiver_branch_id', Auth::user()->branch_id)
+        ->when($request->receiver_name, function ($query, $name) {
+            return $query->where('receiver_name', $name);
+        })
+        ->when($request->receiver_phone, function ($query, $phone) {
+            return $query->where('receiver_phone', $phone);
+        })
+        ->when($request->receiver_email, function ($query, $email) {
+            return $query->where('receiver_email', $email);
+        })
+        ->when($request->receiver_address, function ($query, $address) {
+            return $query->where('receiver_address', $address);
+        })
+        ->latest()->get();
+        if ($couriers) {
+            foreach ($couriers as $courier) {
+                $output .= '<tr>
+                    <td>' . $courier->sender_name.'<br>'.$courier->sender_phone.'</td>
+                    <td>'.$courier->receiver_name.'<br>'.$courier->receiver_phone.'<br>'.$courier->receiver_email.'</td>
+                    <td>'.$courier->code.'</td>
+                    <td>'.showDateTime($courier->created_at, 'd M Y').'</td>
+                    <td>'.$courier->receiver_address.'</td>
+                </tr>';
+            }
+        }
+        
+        return response($output);
     }
 }

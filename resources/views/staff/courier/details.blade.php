@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            @if($courierInfo->receiver_staff_id && $courierInfo->status == 6)
+            @if($courierInfo->receiver_staff_id && $courierInfo->status >= 6)
                 <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
                     <div class="card-body">
                         <h5 class="mb-20 text-muted">@lang('Receiver Staff')</h5>
@@ -130,11 +130,29 @@
 
                                 <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold">
                                   @lang('Status')
-                                    @if($courierInfo->status == 0)
-                                        <span class="badge badge--primary">@lang('Received')</span>
-                                    @elseif($courierInfo->status == 1)
-                                        <span class="badge badge--success">@lang('Delivery')</span>
-                                    @endif
+                                        @if($courierInfo->status == 0)
+                                            <span class="badge badge--primary">@lang('Received')</span>
+                                        @elseif($courierInfo->status == 1)
+                                            <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverWarehouse->name}}</span>
+                                        @elseif($courierInfo->status == 2)
+                                            <span class="badge badge--primary">{{$courierInfo->receiverWarehouse->name}} @lang('Received')</span>
+                                        @elseif($courierInfo->status == 3)
+                                            <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverWarehouse->name}}</span>
+                                        @elseif($courierInfo->status == 4)
+                                            <span class="badge badge--primary">{{$courierInfo->receiverWarehouse->name}} @lang('Received')</span>
+                                        @elseif($courierInfo->status == 5)
+                                            <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverBranch->name}}</span>
+                                        @elseif($courierInfo->status == 6)
+                                            <span class="badge badge--primary">{{$courierInfo->receiverBranch->name}} @lang('Received')</span>
+                                        @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 0)
+                                            <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiver_name}}</span>
+                                        @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 1)
+                                            <span class="badge badge--success">Successful Delivery</span>
+                                        @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 2)
+                                            <span class="badge badge--primary">Unsuccessful Delivery</span>
+                                        @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
+                                            <span class="badge badge--primary">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
+                                        @endif
                                 </li>
                             </ul>
                         </div>

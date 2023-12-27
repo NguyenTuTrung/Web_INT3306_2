@@ -121,4 +121,6 @@ class HomeController extends Controller
         $qrCode = QrCode::size(150)->generate($courierInfo->code);
         return view('manager_warehouse.courier.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
+
+    
 }
