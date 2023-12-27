@@ -17,6 +17,7 @@ use DNS1D;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;  
 
 class HomeController extends Controller
 {
@@ -188,7 +189,7 @@ class HomeController extends Controller
         $pageTitle = "Courier Search";
         $emptyMessage = "No Data Found";
         $user = Auth::user();
-        $courierInfos = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->where('code', $search)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('code', $search)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
         return view('manager.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos', 'search'));
     }
 
@@ -200,8 +201,8 @@ class HomeController extends Controller
         $courierInfo = CourierInfo::where('id', $id)->first();
         $courierProductInfos = CourierProduct::with('type')->where('courier_info_id', $courierInfo->id)->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
-        $code = '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($courierInfo->code, 'C128') . '" alt="barcode"   />' . "<br>" . $courierInfo->code;
-        return view('manager.courier.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'code'));
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
+        return view('manager.courier.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
 

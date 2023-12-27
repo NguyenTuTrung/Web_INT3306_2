@@ -8,8 +8,8 @@
                     <table class="table table--light style--two">
                         <thead>
                             <tr>
-                                <th>@lang('Sender Branch - Staff')</th>
-                                <th>@lang('Receiver Branch - Staff')</th>
+                                <th>@lang('Sender Branch/Warehouse - Staff')</th>
+                                <th>@lang('Receiver Branch/Warehouse - Staff')</th>
                                 <th>@lang('Amount - Order Number')</th>
                                 <th>@lang('Creations Date')</th>
                                 <th>@lang('Payment Status')</th>
@@ -20,15 +20,15 @@
                         <tbody>
                         @forelse($courierInfos as $courierInfo)
                             <tr>
-                                <td data-label="@lang('Sender Branch')">
-                                    <span>{{__($courierInfo->senderBranch->name)}}</span><br>
+                                <td data-label="@lang('Sender Branch/Warehouse - Staff')">
+                                    <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
                                     <a href="{{route('manager_warehouse.staff.edit', encrypt($courierInfo->senderStaff->id))}}"><span>@</span>{{__($courierInfo->senderStaff->username)}}</a>
                                 </td>
 
-                                <td data-label="@lang('Receiver Branch - Staff')">
+                                <td data-label="@lang('Receiver Branch/Warehouse - Staff')">
                                     <span>
-                                        @if($courierInfo->receiver_branch_id)
-                                            {{__($courierInfo->receiverBranch->name)}}
+                                        @if($courierInfo->receiver_warehouse_id)
+                                            {{__($courierInfo->receiverWarehouse->name)}}
                                         @else
                                             @lang('')
                                         @endif

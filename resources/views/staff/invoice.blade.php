@@ -12,10 +12,14 @@
             <div class="invoice">
                 <div class="row mt-3">
                     <div class="col-lg-6">
-                        @php echo $code @endphp
+                        <h5 >@lang('Date'): {{ showDateTime($courierInfo->created_at, 'd M Y') }}</h5>
                     </div>
+
                     <div class="col-lg-6">
-                        <h5 class="float-sm-right">@lang('Date'): {{ showDateTime($courierInfo->created_at, 'd M Y') }}</h5>
+                        <div class="float-sm-right">
+                            <h5>{{$courierInfo->code}}</h5>
+                            <div>@php echo $qrCode @endphp</div>
+                        </div>
                     </div>
                 </div>
               <hr>

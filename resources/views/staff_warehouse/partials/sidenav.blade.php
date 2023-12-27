@@ -53,6 +53,14 @@
                     </a>
                 </li>
 
+                <li class="sidebar-menu-item {{menuActive('staff_warehouse.branch*')}}">
+                    <a href="{{route('staff_warehouse.branch.index')}}" class="nav-link"
+                       data-default-url="{{ route('staff_warehouse.branch.index') }}">
+                        <i class="menu-icon las la-code-branch"></i>
+                        <span class="menu-title">@lang('Branch List')</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-menu-item {{menuActive('ticket*')}}">
                     <a href="{{route('ticket')}}" class="nav-link"
                        data-default-url="{{ route('ticket') }}">

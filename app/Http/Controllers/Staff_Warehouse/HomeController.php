@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff_Warehouse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use App\Models\Branch;
 use App\Models\CourierPayment;
 use App\Models\CourierInfo;
 use App\Models\GeneralSetting;
@@ -21,8 +22,11 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Staff Dashboard";
         $emptyMessage = "No data found";
-        $courierDeliveys = CourierInfo::with('senderBranch', 'senderWarehouse','receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->where('status',1)->orWhere('status', 3)->where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->paginate(getPaginate());
-        return view('staff_warehouse.dashboard', compact('pageTitle', 'courierDeliveys', 'emptyMessage'));
+        $sendCourierCount = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->count();
+        $receivedCourierCount = CourierInfo::where('receiver_warehouse_id', $user->warehouse_id)->count();
+        $warehouseCount = Warehouse::where('status', 1)->count();
+        $branchCount = Branch::where('status',1)->count();
+        return view('staff_warehouse.dashboard', compact('pageTitle', 'emptyMessage', 'sendCourierCount', 'receivedCourierCount', 'warehouseCount', 'branchCount'));
     }
 
     public function profile()
@@ -101,6 +105,14 @@ class HomeController extends Controller
         $emptyMessage = "No data found";
         $warehouses = Warehouse::where('status', 1)->latest()->paginate(getPaginate());
         return view('staff_warehouse.warehouse.index', compact('pageTitle', 'emptyMessage', 'warehouses'));
+    }
+
+    public function branchList()
+    {
+        $pageTitle = "Branch List";
+        $emptyMessage = "No data found";
+        $branchs = Branch::where('status', 1)->latest()->paginate(getPaginate());
+        return view('staff_warehouse.branch.index', compact('pageTitle', 'emptyMessage', 'branchs'));
     }
 
 }
