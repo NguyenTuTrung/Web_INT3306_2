@@ -9,11 +9,9 @@
                             <thead>
                                 <tr>
                                     <th>@lang('Sender Branch/Warehouse - Staff')</th>
-                                <th>@lang('Receiver Warehouse - Staff')</th>
-                                <th>@lang('Amount - Order Number')</th>
+                                    <th>@lang('Amount - Order Number')</th>
                                     <th>@lang('Creations Date')</th>
                                     <th>@lang('Payment Status')</th>
-                                    <th>@lang('Status')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
                             </thead>
@@ -21,25 +19,13 @@
                             @forelse($courierDeliveys as $courierInfo)
                                 <tr>
                                     <tr>
-                                    <td data-label="@lang('Sender Warehouse')">
-                                    <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
-                                    {{__($courierInfo->senderStaff->fullname)}}
-                                </td>
-
-                                <td data-label="@lang('Receiver Warehouse - Staff')">
-                                    <span>
-                                        @if($courierInfo->receiver_warehouse_id)
-                                            {{__($courierInfo->receiverWarehouse->name)}}
-                                        @else
-                                            @lang('N/A')
-                                        @endif
-                                    </span>
-                                    <br>
-                                    @if($courierInfo->receiver_staff_id)
-                                        {{__($courierInfo->receiverStaff->fullname)}}
+                                    <td data-label="@lang('Sender Branch/Warehouse - Staff')">
+                                    @if($courierInfo->sender_warehouse_id != 0)
+                                        <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>{{__($courierInfo->senderBranch->name)}}</span><br>
                                     @endif
+                                    {{__($courierInfo->senderStaff->fullname)}}
                                 </td>
 
                                 <td data-label="@lang('Amount Order Number')">
@@ -58,25 +44,13 @@
                                             <span class="badge badge--danger">@lang('Unpaid')</span>
                                         @endif
                                     </td>
-
-
-                                    <td data-label="@lang('Status')">
-                                        @if($courierInfo->status == 0)
-                                            <span class="badge badge--primary">@lang('Received')</span>
-                                        @elseif($courierInfo->status == 1)
-                                            <span class="badge badge--success">@lang('Delivery')</span>
-                                        @endif
-                                    </td>
                                 
                                     <td data-label="@lang('Action')">
-                                        @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 1)
-                                            <a href="javascript:void(0)" title="" class="icon-btn btn--info ml-1 delivery" data-code="{{$courierInfo->code}}">@lang('Delivery')</a>
+                                        @if($courierInfo->status  == 1 || $courierInfo->status == 3)
+                                            <a href="javascript:void(0)" title="" class="icon-btn btn--info ml-1 confirm" data-code="{{$courierInfo->code}}">@lang('Confirm')</a>
                                         @endif
-                                        @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0)
-                                            <a href="javascript:void(0)" title="" class="icon-btn btn--success ml-1 payment" data-code="{{$courierInfo->code}}">@lang('Payment')</a>
-                                        @endif
-                                       <a href="{{route('staff_warehouse.courier.invoice', encrypt($courierInfo->id))}}" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
-                                       <a href="{{route('staff_warehouse.courier.details', encrypt($courierInfo->id))}}" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
+                                       <a href="{{route('staff_warehouse.courier.invoice', $courierInfo->id)}}" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
+                                       <a href="{{route('staff_warehouse.courier.details', $courierInfo->id)}}" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
                                     </td>
                                 </tr>
                             @empty
@@ -96,51 +70,22 @@
         </div>
     </div>
 
-
-
-<div class="modal fade" id="paymentBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Payment Confirmation')</h5>
+                <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Confirmation')</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
             
-            <form action="{{route('staff_warehouse.courier.payment')}}" method="POST">
+            <form action="{{route('staff_warehouse.courier.confirm')}}" method="POST">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="code">
                 <div class="modal-body">
-                    <p>@lang('Are you sure to collect this amount?')</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn--secondary" data-dismiss="modal">@lang('Close')</button>
-                    <button type="submit" class="btn btn--success">@lang('Yes')</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="deliveryBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Delivery Confirmation')</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            
-            <form action="{{route('staff_warehouse.courier.delivery')}}" method="POST">
-                @csrf
-                @method('POST')
-                <input type="hidden" name="code">
-                <div class="modal-body">
-                    <p>@lang('Are you sure to delivery this courier?')</p>
+                    <p>@lang('Are you sure to confirm this courier in the warehouse?')</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn--secondary" data-dismiss="modal">@lang('Close')</button>
@@ -163,8 +108,8 @@
         modal.modal('show');
     });
 
-    $('.delivery').on('click', function () {
-        var modal = $('#deliveryBy');
+    $('.confirm').on('click', function () {
+        var modal = $('#confirmBy');
         modal.find('input[name=code]').val($(this).data('code'))
         modal.modal('show');
     });

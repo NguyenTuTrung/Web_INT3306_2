@@ -15,6 +15,11 @@ class CourierInfo extends Model
         return $this->belongsTo(User::class, 'sender_staff_id');
     }
 
+    public function senderStaffBranch()
+    {
+        return $this->belongsTo(User::class, 'sender_staff_branch');
+    }
+
     public function receiverStaff()
     {
         return $this->belongsTo(User::class, 'receiver_staff_id');

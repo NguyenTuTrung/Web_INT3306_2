@@ -13,10 +13,6 @@ class SupportMessage extends Model
         return $this->belongsTo(SupportTicket::class, 'supportticket_id', 'id');
     }
 
-    public function admin(){
-        return $this->belongsTo(Admin::class, 'admin_id', 'id');
-    }
-
     public function attachments()
     {
         return $this->hasMany('App\Models\SupportAttachment','support_message_id','id');

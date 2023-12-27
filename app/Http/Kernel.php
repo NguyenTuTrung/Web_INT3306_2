@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'staff' => \App\Http\Middleware\Staff::class,
         'manager_warehouse' => \App\Http\Middleware\Manager_Warehouse::class,
         'staff_warehouse' => \App\Http\Middleware\Staff_Warehouse::class,
+        'delivery_man' => \App\Http\Middleware\Delivery_Man::class,
         'checkStatus' => \App\Http\Middleware\CheckStatus::class,
         'checkStatusApi' => \App\Http\Middleware\CheckStatusApi::class,
         'demo' => \App\Http\Middleware\Demo::class,

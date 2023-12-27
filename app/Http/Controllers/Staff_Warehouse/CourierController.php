@@ -9,7 +9,6 @@ use App\Models\Branch;
 use App\Models\Type;
 use DNS1D;
 use App\Models\CourierInfo;
-use App\Models\AdminNotification;
 use Carbon\Carbon;
 use App\Models\CourierProduct;
 use App\Models\CourierPayment;
@@ -21,10 +20,11 @@ class CourierController extends Controller
     public function create()
     {
         $pageTitle = "Courier Send";
+        $emptyMessage = "No data found";
         $warehouses = Warehouse::where('status', 1)->latest()->get();
         $branchs = Branch::where('status', 1)->latest()->get();
-        $types = Type::where('status', 1)->with('unit')->latest()->get();
-        return view('staff_warehouse.courier', compact('pageTitle', 'warehouses', 'branchs', 'types'));
+        $courierLists = CourierInfo::where('status', 2)->orWhere('status', 4)->where('receiver_warehouse_id', Auth::user()->warehouse_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderWarehouse')->paginate(getPaginate());
+        return view('staff_warehouse.courier', compact('pageTitle', 'emptyMessage', 'warehouses', 'branchs', 'courierLists'));
     }
 
     public function store(Request $request)
@@ -32,64 +32,22 @@ class CourierController extends Controller
         $request->validate([
             'branch' => 'required',
             'warehouse' => 'required',
-            'sender_name' => 'required|max:40',
-            'sender_email' => 'required|email|max:40',
-            'sender_phone' => 'required|string|max:40',
-            'sender_address' => 'required|max:255', 
-            'receiver_name' => 'required|max:40',
-            'receiver_email' => 'required|email|max:40',
-            'receiver_phone' => 'required|string|max:40',
-            'receiver_address' => 'required|max:255',
-            'courierName.*' => 'required_with:quantity|exists:types,id',
-            'quantity.*' => 'required_with:courierName|integer|gt:0',
-            'amount' => 'required|array',
-            'amount.*' => 'numeric|gt:0',
+            'couriers' => 'required',
         ]);
         $sender = Auth::user();
-        $courier = new CourierInfo();
-        $courier->invoice_id = getTrx();
-        $courier->code = getTrx();
-        $courier->sender_warehouse_id = $sender->warehouse_id;
-        $courier->sender_staff_id = $sender->id;
-        $courier->sender_name = $request->sender_name;
-        $courier->sender_email = $request->sender_email;
-        $courier->sender_phone = $request->sender_phone;
-        $courier->sender_address = $request->sender_address;
-        $courier->receiver_name = $request->receiver_name;
-        $courier->receiver_email = $request->receiver_email;
-        $courier->receiver_phone = $request->receiver_phone;
-        $courier->receiver_address = $request->receiver_address;
-        $courier->receiver_branch_id = $request->branch;
-        $courier->receiver_warehouse_id = $request->warehouse;
-        $courier->status = 0;
-        $courier->save();
-
-        $totalAmount = 0;
-        for ($i=0; $i <count($request->courierName); $i++) { 
-            $courierType = Type::where('id',$request->courierName[$i])->where('status', 1)->firstOrFail();
-            $totalAmount += $request->quantity[$i] * $courierType->price;
-            $courierProduct = new CourierProduct();
-            $courierProduct->courier_info_id = $courier->id;
-            $courierProduct->courier_type_id = $courierType->id;
-            $courierProduct->qty = $request->quantity[$i];
-            $courierProduct->fee = $request->quantity[$i] * $courierType->price;
-            $courierProduct->save();
+        
+        for ($i=0; $i <count($request->couriers); $i++) { 
+            $courierInfos = CourierInfo::where('status', 2)->orWhere('status', 4)->where('id', $request->couriers[$i])->firstOrFail();
+            $courierInfos->receiver_branch_id = $request->branch;
+            $courierInfos->receiver_warehouse_id = $request->warehouse;
+            $courierInfos->sender_staff_id = $sender->id;
+            $courierInfos->sender_warehouse_id = $sender->warehouse_id;
+            $courierInfos->status = $courierInfos->status + 1;
+            $courierInfos->save();
         }
-        $courierPayment = new CourierPayment();
-        $courierPayment->courier_info_id = $courier->id;
-        $courierPayment->amount = $totalAmount;
-        $courierPayment->status = 0;
-        $courierPayment->save();
 
-
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $sender->id;
-        $adminNotification->title = 'Dispatch Courier '.$sender->username;
-        $adminNotification->click_url = urlPath('admin.courier.info.details',$courier->id);
-        $adminNotification->save();
-
-        $notify[]=['success','Courier created successfully'];
-        return redirect()->route('staff.courier.invoice', encrypt($courier->id))->withNotify($notify);
+        $notify[]=['success','Courier sent successfully'];
+        return redirect()->route('staff_warehouse.courier.create')->withNotify($notify);
     }
 
     public function manageCourierList()
@@ -97,7 +55,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "All Courier List";
         $emptyMessage = "No data found";
-        $courierLists = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orWhere('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::Where('status', 2)->orWhere('status', 4)->where('sender_warehouse_id', $user->warehouse_id)->orWhere('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderBranch', 'senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('staff_warehouse.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
@@ -132,11 +90,6 @@ class CourierController extends Controller
         $courierPayment->status = 1;
         $courierPayment->save();
 
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'Courier Payment '.$user->username;
-        $adminNotification->click_url = urlPath('admin.courier.info.details',$courier->id);
-        $adminNotification->save();
         $notify[] =  ['success', 'Payment completed'];
         return back()->withNotify($notify);
     }
@@ -146,29 +99,22 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "Courier Delivery List";
         $emptyMessage = "No data found";
-        $courierDeliveys = CourierInfo::where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse','receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierDeliveys = CourierInfo::with('senderBranch', 'senderWarehouse','receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->where('status',1)->orWhere('status', 3)->where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->paginate(getPaginate());
         return view('staff_warehouse.courier.delivery', compact('pageTitle', 'emptyMessage', 'courierDeliveys'));
     }
 
-    public function deliveryStore(Request $request)
+    public function confirmStore(Request $request)
     {
         $request->validate([
             'code' => 'required|exists:courier_infos,code'
         ]);
         $user = Auth::user();
-        $courier = CourierInfo::where('code', $request->code)->where('status', 0)->firstOrFail();
+        $courier = CourierInfo::where('status', 1)->orWhere('status', 3)->where('code', $request->code)->firstOrFail();
         $courier->receiver_staff_id = $user->id;
-        $courier->status = 1;
+        $courier->status = $courier->status + 1;
         $courier->save();
 
-
-        $adminNotification = new AdminNotification();
-        $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'Courier Delivery '.$user->username;
-        $adminNotification->click_url = urlPath('admin.courier.info.details',$courier->id);
-        $adminNotification->save();
-
-        $notify[] =  ['success', 'Delivery completed'];
+        $notify[] =  ['success', 'Confirm completed'];
         return back()->withNotify($notify);
     }
 
@@ -205,7 +151,7 @@ class CourierController extends Controller
         $pageTitle = "Courier Search";
         $dateSearch = $search;
         $emptyMessage = "No data found";
-        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orWhere('receiver_staff_id', $user->id)->whereBetween('created_at', [Carbon::parse($start), Carbon::parse($end)])->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orWhere('receiver_staff_id', $user->id)->whereBetween('created_at', [Carbon::parse($start), Carbon::parse($end)])->orderBy('id', 'DESC')->with('senderBranch', 'senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
         return view('staff_warehouse.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists', 'dateSearch'));
     }
 
@@ -216,8 +162,7 @@ class CourierController extends Controller
         $pageTitle = "Courier Search";
         $emptyMessage = "No Data Found";
         $user = Auth::user();
-        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orWhere('receiver_staff_id', $user->id)->where('code', $search)->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orWhere('receiver_staff_id', $user->id)->where('code', $search)->with('senderBranch', 'senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
         return view('staff_warehouse.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists', 'search'));
     }
-
 }

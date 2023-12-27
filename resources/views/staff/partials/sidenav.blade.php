@@ -19,9 +19,9 @@
                     </a>
                 </li>
 
-                <li class="sidebar-menu-item">
-                    <a href="" class="nav-link"
-                       data-default-url="">
+                <li class="sidebar-menu-item {{menuActive('staff.courier.forward')}}">
+                    <a href="{{route('staff.courier.forward')}}" class="nav-link"
+                       data-default-url="{{route('staff.courier.forward')}}">
                         <i class="menu-icon las la-user"></i>
                         <span class="menu-title">@lang('Courier Forward')</span>
                     </a>
@@ -33,6 +33,14 @@
                        data-default-url="{{ route('staff.courier.create') }}">
                         <i class="menu-icon las la-paper-plane"></i>
                         <span class="menu-title">@lang('Courier Send')</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-menu-item {{menuActive('staff.courier.send.warehouse')}}">
+                    <a href="{{route('staff.courier.send.warehouse')}}" class="nav-link"
+                       data-default-url="{{ route('staff.courier.send.warehouse') }}">
+                        <i class="menu-icon las la-chevron-right"></i>
+                        <span class="menu-title">@lang('Send Warehouse')</span>
                     </a>
                 </li>
 

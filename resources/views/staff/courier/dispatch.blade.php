@@ -22,7 +22,7 @@
                                     <tr>
                                     <td data-label="@lang('Sender Branch')">
                                         <span>{{__($courierInfo->senderBranch->name)}}</span><br>
-                                        {{__($courierInfo->senderStaff->fullname)}}
+                                        {{__($courierInfo->senderStaffBranch->fullname)}}
                                     </td>
 
                                     <td data-label="@lang('Amount Order Number')">
@@ -65,8 +65,8 @@
                                         @if(($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0) || ($courierInfo->status  == 4 && $courierInfo->paymentInfo->status == 0))
                                             <a href="javascript:void(0)" title="" class="icon-btn btn--success ml-1 payment" data-code="{{$courierInfo->code}}">@lang('Payment')</a>
                                         @endif
-                                       <a href="{{route('staff.courier.invoice', $courierInfo->id)}}" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
-                                       <a href="{{route('staff.courier.details', $courierInfo->id)}}" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
+                                       <a href="{{route('staff.courier.invoice', encrypt($courierInfo->id))}}" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
+                                       <a href="{{route('staff.courier.details', encrypt($courierInfo->id))}}" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
                                     </td>
                                 </tr>
                             @empty

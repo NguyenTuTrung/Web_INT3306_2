@@ -42,10 +42,10 @@
                 </div>
                 <div class="details">
                     <div class="numbers">
-                        <span class="amount">{{$branchCount}}</span>
+                        <span class="amount">{{0}}</span>
                     </div>
                     <div class="desciption">
-                        <span>@lang('Total Brach')</span>
+                        <span>@lang('Total Shipments')</span>
                     </div>
 
                     <a href="{{route('staff.branch.index')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
@@ -94,22 +94,24 @@
                                 <tr>
                                     <td data-label="@lang('Sender Branch')">
                                     <span>{{__($courierInfo->senderBranch->name)}}</span><br>
-                                    {{__($courierInfo->senderStaff->fullname)}}
+                                    {{__($courierInfo->senderStaffBranch->fullname)}}
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
-                                    <span>
-                                        @if($courierInfo->receiver_branch_id)
-                                            {{__($courierInfo->receiverBranch->name)}}
+                                    @if($courierInfo->status == 6)
+                                        <span>
+                                            @if($courierInfo->receiver_branch_id)
+                                                {{__($courierInfo->receiverBranch->name)}}
+                                            @else
+                                                @lang('')
+                                            @endif
+                                        </span>
+                                        <br>
+                                        @if($courierInfo->receiver_staff_id)
+                                            {{__($courierInfo->receiverStaff->fullname)}}
                                         @else
-                                            @lang('N/A')
+                                            <span>@lang('')</span>
                                         @endif
-                                    </span>
-                                    <br>
-                                    @if($courierInfo->receiver_staff_id)
-                                        {{__($courierInfo->receiverStaff->fullname)}}
-                                    @else
-                                        <span>@lang('N/A')</span>
                                     @endif
                                 </td>
 

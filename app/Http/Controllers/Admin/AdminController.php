@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminNotification;
 use App\Models\User;
 use App\Models\UserLogin;
 use App\Models\Branch;
@@ -127,28 +126,4 @@ class AdminController extends Controller
         $notify[] = ['success', 'Password changed successfully.'];
         return redirect()->route('admin.password')->withNotify($notify);
     }
-
-    public function notifications(){
-        $notifications = AdminNotification::orderBy('id','desc')->with('user')->paginate(getPaginate());
-        $pageTitle = 'Notifications';
-        return view('admin.notifications',compact('pageTitle','notifications'));
-    }
-
-
-    public function notificationRead($id){
-        $notification = AdminNotification::findOrFail($id);
-        $notification->read_status = 1;
-        $notification->save();
-        return redirect($notification->click_url);
-    }
-
-    public function readAll(){
-        AdminNotification::where('read_status',0)->update([
-            'read_status'=>1
-        ]);
-        $notify[] = ['success','Notifications read successfully'];
-        return back()->withNotify($notify);
-    }
-
-
 }

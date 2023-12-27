@@ -58,6 +58,7 @@ class DeliveryManController extends Controller
         $delivery_man->password  = Hash::make($request->password);
         $delivery_man->status = $request->status ? 1 : 0;
         $delivery_man->save();
+
         notify($delivery_man, 'DELIVERY_MAN_CREATE', [
             'username' => $delivery_man->username,
             'email' => $delivery_man->email,
@@ -98,6 +99,7 @@ class DeliveryManController extends Controller
         $delivery_man->password  = $request->password ? Hash::make($request->password) : $delivery_man->password;
         $delivery_man->status = $request->status ? 1 : 0;
         $delivery_man->save();
+        
         $notify[] = ['success', 'Delivery Man has been updated'];
         return back()->withNotify($notify);
     }

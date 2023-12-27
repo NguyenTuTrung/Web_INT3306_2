@@ -30,14 +30,14 @@
                                         @if($courierInfo->receiver_branch_id)
                                             {{__($courierInfo->receiverBranch->name)}}
                                         @else
-                                            @lang('N/A')
+                                            @lang('')
                                         @endif
                                     </span>
                                     <br>
                                     @if($courierInfo->receiver_staff_id)
                                         <a href="{{route('manager_warehouse.staff.edit', encrypt($courierInfo->receiverStaff->id))}}"><span>@</span>{{__($courierInfo->receiverStaff->username)}}</a>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </td>
 

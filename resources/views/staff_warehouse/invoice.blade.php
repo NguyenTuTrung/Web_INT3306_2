@@ -48,8 +48,10 @@
                             <span class="badge badge--danger">@lang('Due')</span>
                          @endif
                     <br>
-                    <b>@lang('Sender At Branch/Warehouse'):</b> {{__($courierInfo->senderWarehouse->name)}}<br>
-                    <b>@lang('Received At Warehouse'):</b> {{__($courierInfo->receiverWarehouse->name)}}
+                    <b>@lang('Sender At Branch/Warehouse'):</b> {{__($courierInfo->senderBranch->name)}}<br>
+                    @if($courierInfo->status == 6)
+                        <b>@lang('Received At Warehouse'):</b> {{__($courierInfo->receiverBranch->name)}}
+                    @endif
                 </div>
             </div>
 

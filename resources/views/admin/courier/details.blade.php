@@ -185,7 +185,7 @@
                                     @if(!empty($courierInfo->paymentInfo->receiver_id))
                                         <span>{{__($courierInfo->paymentInfo->receiver->username)}}</span>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold">
@@ -193,7 +193,7 @@
                                     @if(!empty($courierInfo->paymentInfo->branch_id))
                                         <span>{{__($courierInfo->paymentInfo->brach->name)}}</span>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold">
@@ -201,7 +201,7 @@
                                     @if(!empty($courierInfo->paymentInfo->date))
                                         <span>{{showDateTime($courierInfo->date, 'd M Y')}}</span>
                                     @else
-                                        <span>@lang('N/A')</span>
+                                        <span>@lang('')</span>
                                     @endif
                                 </li>
 

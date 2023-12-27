@@ -28,7 +28,7 @@
                 </li>
 
 
-                 <li class="sidebar-menu-item {{menuActive('staff_warehouse.courier*')}}">
+                 <li class="sidebar-menu-item {{menuActive('staff_warehouse.courier.list')}}">
                     <a href="{{route('staff_warehouse.courier.list')}}" class="nav-link"
                        data-default-url="{{ route('staff_warehouse.courier.list') }}">
                         <i class="menu-icon las la-share"></i>
@@ -50,14 +50,6 @@
                        data-default-url="{{ route('staff_warehouse.warehouse.index') }}">
                         <i class="menu-icon las la-code-branch"></i>
                         <span class="menu-title">@lang('Warehouse List')</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-menu-item {{menuActive('staff.cash.income')}}">
-                    <a href="{{route('staff.cash.income')}}" class="nav-link"
-                       data-default-url="{{ route('staff.cash.income') }}">
-                        <i class="menu-icon las la-wallet"></i>
-                        <span class="menu-title">@lang('Cash Collection')</span>
                     </a>
                 </li>
 

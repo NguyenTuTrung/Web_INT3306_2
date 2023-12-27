@@ -22,19 +22,19 @@ class HomeController extends Controller
         $pageTitle = "Staff Dashboard";
         $emptyMessage = "No data found";
         $branchCount = Branch::where('status', 1)->count();
-        $sendCourierCount = CourierInfo::where('sender_staff_id', $user->id)->count();
+        $sendCourierCount = CourierInfo::where('sender_staff_branch', $user->id)->count();
         $receivedCourierCount = CourierInfo::where('receiver_staff_id', $user->id)->count();
         $cashCollection = CourierPayment::where('receiver_id', $user->id)->sum('amount');
-        $courierDeliveys = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->take(5)->get();
+        $courierDeliveys = CourierInfo::where('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->take(5)->get();
         return view('staff.dashboard', compact('pageTitle', 'branchCount', 'sendCourierCount', 'receivedCourierCount', 'cashCollection', 'courierDeliveys', 'emptyMessage'));
     }
 
     public function sendCourierList()
     {
         $user = Auth::user();
-        $pageTitle = "Dispatch Courier List";
-        $emptyMessage = "No Data Found";
-        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $pageTitle = "Courier Dispatch List";
+        $emptyMessage = "No data found";
+        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('staff.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
@@ -43,7 +43,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Received Courier List";
         $emptyMessage = "No Data Found";
-        $courierLists = CourierInfo::where('receiver_staff_id', $user->id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('receiver_staff_id', $user->id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
         return view('staff.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
@@ -123,16 +123,5 @@ class HomeController extends Controller
         $user->save();
         $notify[] = ['success', 'Password changed successfully.'];
         return redirect()->route('staff.password')->withNotify($notify);
-    }
-
-    public function show2faForm()
-    {
-        $general = GeneralSetting::first();
-        $ga = new GoogleAuthenticator();
-        $user = auth()->user();
-        $secret = $ga->createSecret();
-        $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->username . '@' . $general->sitename, $secret);
-        $pageTitle = 'Two Factor';
-        return view('staff.twofactor', compact('pageTitle', 'secret', 'qrCodeUrl'));
     }
 }
