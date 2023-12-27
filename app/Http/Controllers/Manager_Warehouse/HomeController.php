@@ -17,6 +17,7 @@ use App\Lib\GoogleAuthenticator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class HomeController extends Controller
 {
@@ -70,6 +71,55 @@ class HomeController extends Controller
         $emptyMessage = "No data found";
         $branchs = Branch::where('status', 1)->where('warehouse_id', $manager_warehouse->warehouse_id)->where('name', 'like',"%$search%")->orWhere('email', 'like',"%$search%")->orWhere('address', 'like',"%$search%")->orderBy('id', 'DESC')->paginate(getPaginate());
         return view('manager_warehouse.branch.index', compact('pageTitle', 'emptyMessage', 'branchs', 'search'));    
+    }
+
+    public function courierInfo()
+    {
+        $user = Auth::user();
+        $pageTitle = "All Courier List";
+        $emptyMessage = "No data found";
+        $courierInfos = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orWhere('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
+    }
+
+    public function sendCourier()
+    {
+        $user = Auth::user();
+        $pageTitle = "Dispatch Courier List";
+        $emptyMessage = "No data found";
+        $courierInfos = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
+    }
+
+
+    public function receivedCourier()
+    {
+        $user = Auth::user();
+        $pageTitle = "Upcoming Courier List";
+        $emptyMessage = "No data found";
+        $courierInfos = CourierInfo::where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
+    }
+
+    public function courierSearch(Request $request)
+    {
+        $request->validate(['search' => 'required']);
+        $search = $request->search;
+        $pageTitle = "Courier Search";
+        $emptyMessage = "No Data Found";
+        $user = Auth::user();
+        $courierInfos = CourierInfo::where('code', $search)->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos', 'search'));
+    }
+
+    public function invoice($id)
+    {
+        $pageTitle = "Invoice";
+        $courierInfo = CourierInfo::where('id', $id)->first();
+        $courierProductInfos = CourierProduct::with('type')->where('courier_info_id', $courierInfo->id)->get();
+        $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
+        return view('manager_warehouse.courier.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
     

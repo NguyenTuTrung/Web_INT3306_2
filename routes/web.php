@@ -246,6 +246,7 @@ Route::namespace('Manager_Warehouse')->name('manager_warehouse.')->prefix('manag
                 Route::get('upcoming/courier/list', 'HomeController@receivedCourier')->name('courier.upcoming');
                 Route::get('courier/search/date/{scope}', 'HomeController@courierSearchDate')->name('courier.search.date');
                 Route::get('courier/search', 'HomeController@courierSearch')->name('courier.search');
+                Route::get('courier/invoice/{id}', 'HomeController@invoice')->name('courier.invoice');
                 Route::get('branch/list', 'HomeController@branchList')->name('branch.list');
                 Route::get('branch/search', 'HomeController@branchSearch')->name('branch.search');
                
@@ -313,6 +314,7 @@ Route::namespace('Staff_Warehouse')->name('staff_warehouse.')->prefix('staff_war
                 Route::post('password/update', 'HomeController@passwordUpdate')->name('password.update.data');
                 Route::get('warehouse/list', 'HomeController@warehouseList')->name('warehouse.index');
                 Route::get('warehouse/search', 'HomeController@warehouseSearch')->name('warehouse.search');
+                Route::get('branch/list', 'HomeController@branchList')->name('branch.index');
 
                 Route::get('send/courier/list', 'HomeController@sendCourierList')->name('send.courier.list');
                 Route::get('received/courier/list', 'HomeController@receivedCourierList')->name('received.courier.list');
@@ -372,6 +374,3 @@ Route::get('blog/{id}/{slug}', 'SiteController@blogDetails')->name('blog.details
 Route::get('placeholder-image/{size}', 'SiteController@placeholderImage')->name('placeholder.image');
 Route::get('/{slug}', 'SiteController@pages')->name('pages');
 Route::get('/', 'SiteController@index')->name('home');
-Route::get('/hello', function () {
-    return 'hello';
-});

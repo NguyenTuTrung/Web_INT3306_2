@@ -8,13 +8,14 @@ use App\Models\Branch;
 use App\Models\Type;
 use DNS1D;
 use App\Models\CourierInfo;
-use App\Models\DeliveryCourier;
+Use App\Models\DeliveryCourier;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\CourierProduct;
 use App\Models\CourierPayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CourierController extends Controller
 {
@@ -127,8 +128,8 @@ class CourierController extends Controller
         $courierInfo = CourierInfo::where('id', decrypt($id))->first();
         $courierProductInfos = CourierProduct::where('courier_info_id', $courierInfo->id)->with('type')->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
-        $code = '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($courierInfo->code, 'C128') . '" alt="barcode"   />' . "<br>" . $courierInfo->code;
-        return view('staff.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'code'));
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
+        return view('staff.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
 
@@ -137,7 +138,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "All Courier List";
         $emptyMessage = "No data found";
-        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('sender_branch_id', $user->branch_id)->orWhere('receiver_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch', 'receiverWarehouse')->paginate(getPaginate());
         return view('staff.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists'));
     }
 
@@ -175,7 +176,7 @@ class CourierController extends Controller
         $pageTitle = "Courier Search";
         $emptyMessage = "No Data Found";
         $user = Auth::user();
-        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orWhere('receiver_staff_id', $user->id)->where('code', $search)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('code', $search)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
         return view('staff.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists', 'search'));
     }
 
@@ -194,7 +195,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "Courier Dispatch List";
         $emptyMessage = "No data found";
-        $courierDispatchs = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
+        $courierDispatchs = CourierInfo::where('sender_branch_id', $user->branch_id)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch', 'receiverWarehouse')->paginate(getPaginate());
         return view('staff.courier.dispatch', compact('pageTitle', 'emptyMessage', 'courierDispatchs'));
     }
 

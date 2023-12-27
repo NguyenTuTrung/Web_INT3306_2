@@ -20,10 +20,10 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Delivery Man Dashboard";
         $emptyMessage = "No data found";
-        $shipmentCount = DeliveryCourier::where('user_id', $user->id)->count();
+        $shipmentCount = DeliveryCourier::where('user_id', $user->id)->where('status', 0)->count();
         $successfullCouriers = DeliveryCourier::where('user_id', $user->id)->where('status', 1)->count();
-        $missionCount = DeliveryCourier::where('user_id', $user->id)->where('status', 0)->count();
-        $returnsCount = DeliveryCourier::where('user_id', $user->id)->where('status', 2)->count();
+        $missionCount = DeliveryCourier::where('user_id', $user->id)->where('status', 2)->count();
+        $returnsCount = DeliveryCourier::where('user_id', $user->id)->where('status', 3)->count();
         $courierLists = DeliveryCourier::where('user_id', $user->id)->with('courierInfo')->paginate(getPaginate());
         return view('delivery_man.dashboard', compact('pageTitle', 'emptyMessage', 'shipmentCount', 'successfullCouriers', 'missionCount', 'returnsCount', 'courierLists'));
     }

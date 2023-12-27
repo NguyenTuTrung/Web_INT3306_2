@@ -164,11 +164,7 @@ class TicketController extends Controller
 
     public function replyTicket(Request $request, $id)
     {
-        $userId = 0;
-        if (Auth::user()) {
-            $userId = Auth::id();
-        }
-        $ticket = SupportTicket::where('user_id',$userId)->where('id',$id)->firstOrFail();
+        $ticket = SupportTicket::where('id',$id)->firstOrFail();
         $message = new SupportMessage();
         if ($request->replayTicket == 1) {
             $attachments = $request->file('attachments');

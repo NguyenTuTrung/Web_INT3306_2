@@ -1,70 +1,72 @@
 @extends('staff_warehouse.layouts.app')
 @section('panel')
-<div class="row">
-        <div class="col-lg-12">
-            <div class="card b-radius--10 ">
-                <div class="card-body p-0">
-                    <div class="table-responsive--sm table-responsive">
-                        <table class="table table--light style--two">
-                            <thead>
-                                <tr>
-                                    <th>@lang('Sender Branch/Warehouse - Staff')</th>
-                                    <th>@lang('Amount - Order Number')</th>
-                                    <th>@lang('Creations Date')</th>
-                                    <th>@lang('Payment Status')</th>
-                                    <th>@lang('Action')</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @forelse($courierDeliveys as $courierInfo)
-                                <tr>
-                                    <tr>
-                                    <td data-label="@lang('Sender Branch/Warehouse - Staff')">
-                                    @if($courierInfo->sender_warehouse_id != 0)
-                                        <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
-                                    @else
-                                        <span>{{__($courierInfo->senderBranch->name)}}</span><br>
-                                    @endif
-                                    {{__($courierInfo->senderStaff->fullname)}}
-                                </td>
-
-                                <td data-label="@lang('Amount Order Number')">
-                                    <span class="font-weight-bold">{{getAmount($courierInfo->paymentInfo->amount)}} {{ $general->cur_text }}</span><br>
-                                    <span>{{__($courierInfo->code) }}</span>
-                                </td>
-
-                                     <td data-label="@lang('Creations Date')">
-                                        {{showDateTime($courierInfo->created_at, 'd M Y')}}<br>{{ diffForHumans($courierInfo->created_at)}}
-                                    </td>
-
-                                    <td data-label="@lang('Payment Status')">
-                                        @if($courierInfo->paymentInfo->status == 1)
-                                            <span class="badge badge--success">@lang('Paid')</span>
-                                        @elseif($courierInfo->paymentInfo->status == 0)
-                                            <span class="badge badge--danger">@lang('Unpaid')</span>
-                                        @endif
-                                    </td>
-                                
-                                    <td data-label="@lang('Action')">
-                                        @if($courierInfo->status  == 1 || $courierInfo->status == 3)
-                                            <a href="javascript:void(0)" title="" class="icon-btn btn--info ml-1 confirm" data-code="{{$courierInfo->code}}">@lang('Confirm')</a>
-                                        @endif
-                                       <a href="{{route('staff_warehouse.courier.invoice', $courierInfo->id)}}" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
-                                       <a href="{{route('staff_warehouse.courier.details', $courierInfo->id)}}" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td class="text-muted text-center" colspan="100%">{{__($emptyMessage) }}</td>
-                                </tr>
-                            @endforelse
-
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="row mt-50 mb-none-30">
+        <div class="col-xl-3 col-lg-6 col-sm-6 mb-30">
+            <div class="dashboard-w1 bg--19 b-radius--10 box-shadow" >
+                <div class="icon">
+                    <i class="fa fa-wallet"></i>
                 </div>
-                <div class="card-footer py-4">
-                    {{ paginateLinks($courierDeliveys) }}
+                <div class="details">
+                    <div class="numbers">
+                        <span class="amount">{{$sendCourierCount}}</span>
+                    </div>
+                    <div class="desciption">
+                        <span>@lang('Total Send Courier')</span>
+                    </div>
+                    <a href="{{route('staff_warehouse.courier.list')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-sm-6 mb-30">
+            <div class="dashboard-w1 bg--3 b-radius--10 box-shadow" >
+                <div class="icon">
+                    <i class="fa fa-spinner"></i>
+                </div>
+                <div class="details">
+                    <div class="numbers">
+                        <span class="amount">{{$receivedCourierCount}}</span>
+                    </div>
+                    <div class="desciption">
+                        <span>@lang('Total Received Courier')</span>
+                    </div>
+                    <a href="{{route('staff_warehouse.courier.list')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-sm-6 mb-30">
+            <div class="dashboard-w1 bg--12 b-radius--10 box-shadow" >
+                <div class="icon">
+                    <i class="fa fa-money-bill-alt"></i>
+                </div>
+                <div class="details">
+                    <div class="numbers">
+                        <span class="amount">{{$warehouseCount}}</span>
+                    </div>
+                    <div class="desciption">
+                        <span>@lang('Total Warehouse')</span>
+                    </div>
+
+                    <a href="{{route('staff_warehouse.warehouse.index')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-sm-6 mb-30">
+            <div class="dashboard-w1 bg--6 b-radius--10 box-shadow">
+                <div class="icon">
+                    <i class="fa fa-hand-holding-usd"></i>
+                </div>
+                <div class="details">
+                    <div class="numbers">
+                        <span class="amount">{{$branchCount}}</span>
+                    </div>
+                    <div class="desciption">
+                        <span>@lang('Total Branch')</span>
+                    </div>
+
+                    <a href="{{route('staff_warehouse.branch.index')}}" class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
                 </div>
             </div>
         </div>

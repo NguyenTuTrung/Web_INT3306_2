@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.1",
+        "php": "^7.3|^8.",
         "coingate/coingate-php": "^3.0",
         "ezyang/htmlpurifier": "^4.13",
         "fideloper/proxy": "^4.4",
@@ -29,7 +29,8 @@
         "stripe/stripe-php": "^7.72",
         "textmagic/sdk": "dev-master",
         "twilio/sdk": "^6.23",
-        "vonage/client": "^2.4"
+        "vonage/client": "^2.4",
+        "simplesoftwareio/simple-qrcode": "^2."
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",

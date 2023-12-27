@@ -80,8 +80,8 @@
                         <table class="table table--light style--two">
                         <thead>
                             <tr>
-                                <th>@lang('Sender Branch - Staff')</th>
-                                <th>@lang('Receiver Branch - Staff')</th>
+                                <th>@lang('Sender Branch/Warehouse - Staff')</th>
+                                <th>@lang('Receiver Branch/Warehouse - Staff')</th>
                                 <th>@lang('Amount - Order Number')</th>
                                 <th>@lang('Creations Date')</th>
                                 <th>@lang('Payment Status')</th>
@@ -92,15 +92,15 @@
                         <tbody>
                         @forelse($courierInfos as $courierInfo)
                             <tr>
-                                <td data-label="@lang('Sender Branch')">
-                                    <span>{{__($courierInfo->senderBranch->name)}}</span><br>
+                                <td data-label="@lang('Sender Warehouse - Staff')">
+                                    <span>{{__($courierInfo->senderWarehouse->name)}}</span><br>
                                     <a href="{{route('manager_warehouse.staff.edit', encrypt($courierInfo->senderStaff->id))}}"><span>@</span>{{__($courierInfo->senderStaff->username)}}</a>
                                 </td>
 
-                                <td data-label="@lang('Receiver Branch - Staff')">
+                                <td data-label="@lang('Receiver Warehouse - Staff')">
                                     <span>
-                                        @if($courierInfo->receiver_branch_id)
-                                            {{__($courierInfo->receiverBranch->name)}}
+                                        @if($courierInfo->receiver_warehouse_id)
+                                            {{__($courierInfo->receiverWarehouse->name)}}
                                         @else
                                             @lang('')
                                         @endif
@@ -135,7 +135,25 @@
                                     @if($courierInfo->status == 0)
                                         <span class="badge badge--primary">@lang('Received')</span>
                                     @elseif($courierInfo->status == 1)
-                                        <span class="badge badge--success">@lang('Delivery')</span>
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverWarehouse->name}}</span>
+                                    @elseif($courierInfo->status == 2)
+                                        <span class="badge badge--primary">{{$courierInfo->receiverWarehouse->name}} @lang('Received')</span>
+                                    @elseif($courierInfo->status == 3)
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverWarehouse->name}}</span>
+                                    @elseif($courierInfo->status == 4)
+                                        <span class="badge badge--primary">{{$courierInfo->receiverWarehouse->name}} @lang('Received')</span>
+                                    @elseif($courierInfo->status == 5)
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverBranch->name}}</span>
+                                    @elseif($courierInfo->status == 6)
+                                        <span class="badge badge--primary">{{$courierInfo->receiverBranch->name}} @lang('Received')</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 0)
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiver_name}}</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 1)
+                                        <span class="badge badge--success">Successful Delivery</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 2)
+                                        <span class="badge badge--primary">Unsuccessful Delivery</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
+                                        <span class="badge badge--primary">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
                                     @endif
                                 </td>
                             </tr>

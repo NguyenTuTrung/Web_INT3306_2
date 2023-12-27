@@ -14,6 +14,7 @@ use App\Models\CourierProduct;
 use App\Models\CourierPayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CourierController extends Controller
 {
@@ -72,8 +73,8 @@ class CourierController extends Controller
         $courierInfo = CourierInfo::where('id', decrypt($id))->first();
         $courierProductInfos = CourierProduct::where('courier_info_id', $courierInfo->id)->with('type')->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
-        $code = '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($courierInfo->code, 'C128') . '" alt="barcode"   />' . "<br>" . $courierInfo->code;
-        return view('staff_warehouse.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'code'));
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
+        return view('staff_warehouse.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
     public function payment(Request $request)
@@ -162,7 +163,7 @@ class CourierController extends Controller
         $pageTitle = "Courier Search";
         $emptyMessage = "No Data Found";
         $user = Auth::user();
-        $courierLists = CourierInfo::where('sender_staff_id', $user->id)->orWhere('receiver_staff_id', $user->id)->where('code', $search)->with('senderBranch', 'senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierLists = CourierInfo::where('code', $search)->with('senderBranch', 'senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
         return view('staff_warehouse.courier.list', compact('pageTitle', 'emptyMessage', 'courierLists', 'search'));
     }
 }
