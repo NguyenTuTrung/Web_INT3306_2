@@ -13,6 +13,7 @@ use App\Models\CourierProduct;
 use App\Models\CourierPayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CourierController extends Controller
 {
@@ -65,8 +66,8 @@ class CourierController extends Controller
         $courierInfo = CourierInfo::where('id', decrypt($id))->first();
         $courierProductInfos = CourierProduct::where('courier_info_id', $courierInfo->id)->with('type')->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
-        $code = '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($courierInfo->code, 'C128') . '" alt="barcode"   />' . "<br>" . $courierInfo->code;
-        return view('delivery_man.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'code'));
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
+        return view('delivery_man.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
     public function confirmDone(Request $request)

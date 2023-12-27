@@ -100,8 +100,29 @@ class CourierSettingController extends Controller
     {
         $pageTitle = "Courier Information";
         $emptyMessage = "No data found";
+        $branchs = Branch::where('status', 1)->latest()->paginate(getPaginate());
+        $courierInfos = CourierInfo::orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaffBranch', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $branchId = 0;
+        $senderOrReceiver = 0;
+        return view('admin.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos', 'branchs', 'branchId', 'senderOrReceiver'));
+    }
+
+    public function courierBranchSelect(Request $request)
+    {
+        $pageTitle = "Courier Information";
+        $emptyMessage = "No data found";
+        $branchs = Branch::where('status', 1)->latest()->paginate(getPaginate());
         $courierInfos = CourierInfo::orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
-        return view('admin.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
+        $branchId = $request->input('branchId');
+        $senderOrReceiver = $request->input('senderOrReceiver');
+        if($senderOrReceiver == 0 ){
+            $courierInfos = CourierInfo::where('sender_branch_id', $branchId)->orWhere('receiver_branch_id', $branchId)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        } else if ($senderOrReceiver == 1){
+            $courierInfos = CourierInfo::where('sender_branch_id', $branchId)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        } else {
+            $courierInfos = CourierInfo::where('receiver_branch_id', $branchId)->orderBy('id', 'DESC')->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        }
+        return view('admin.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos', 'branchs', 'branchId', 'senderOrReceiver'));
     }
 
 
