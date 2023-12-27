@@ -88,7 +88,7 @@ class CourierController extends Controller
         $courierInfo = CourierInfo::where('id', decrypt($id))->first();
         $courierProductInfos = CourierProduct::where('courier_info_id', $courierInfo->id)->with('type')->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
-        $code$qrCode = QrCode::size(150)->generate($courierInfo->code);
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
         return view('staff.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
