@@ -2,6 +2,45 @@
 @section('panel')
     <div class="row">
         <div class="col-lg-12">
+            <div class="row mt-12">
+                <div class="form-group col-lg-4">
+                    <select class="form-control form-control-lg" name="branch" id="branch" required="">
+                        @if($branchId == 0)
+                            <option value="0" selected>@lang('All Branch')</option>
+                        @else
+                            <option value="0">@lang('All Branch')</option>
+                        @endif
+                        @foreach($branchs as $branch)
+                            @if($branchId == $branch->id)
+                                <option value="{{$branch->id}}" selected>{{($branch->name)}}</option>
+                            @else
+                                <option value="{{$branch->id}}">{{($branch->name)}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    
+                </div>
+                <div class="form-group col-lg-4">
+                    <select class="form-control form-control-lg" name="senderOrReceiver" id="senderOrReceiver" required="">
+                        @if($senderOrReceiver == 0)
+                            <option value="0" selected>@lang('Sender and Receiver')</option>
+                        @else
+                            <option value="0">@lang('Sender and Receiver')</option>
+                        @endif
+                        @if($senderOrReceiver == 1)
+                            <option value="1" selected>@lang('Sender')</option>
+                        @else
+                            <option value="1">@lang('Sender')</option>
+                        @endif
+                        @if($senderOrReceiver == 2)
+                            <option value="2" selected>@lang('Receiver')</option>
+                        @else
+                            <option value="2">@lang('Receiver')</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
+            
             <div class="card b-radius--10 ">
                 <div class="card-body p-0">
                     <div class="table-responsive--sm table-responsive">
@@ -22,7 +61,7 @@
                                 <tr>
                                     <td data-label="@lang('Sender Branch - Staff')">
                                        <span class="font-weight-bold">{{__($courierInfo->senderBranch->name)}}</span><br>
-                                       {{__($courierInfo->senderStaff->fullname)}}
+                                       {{__($courierInfo->senderStaffBranch->fullname)}}
                                     </td>
                                     <td data-label="@lang('Receiver Branch - Staff')">
                                         @if($courierInfo->receiver_branch_id)
@@ -129,4 +168,21 @@
         }
     })(jQuery)
   </script>
+
+<script>
+    $(document).ready(function () {
+        $('#branch, #senderOrReceiver').on('change', function () {
+            var branchId = $('#branch').val();
+            var senderOrReceiver = $('#senderOrReceiver').val();
+            
+            if (branchId !== '0') {
+                var url = "{{route('admin.courier.select')}}" + "?branchId=" + branchId + "&senderOrReceiver=" + senderOrReceiver;
+                window.location.href = url;
+            } else {
+                window.location.href = "{{route('admin.courier.info.index')}}";
+            }
+        });
+    });
+</script>
 @endpush
+

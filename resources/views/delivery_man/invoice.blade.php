@@ -10,7 +10,7 @@
             </div>
 
             <div class="invoice">
-                <div class="row mt-3">
+            <div class="row mt-3">
                     <div class="col-lg-6">
                         <h5 >@lang('Date'): {{ showDateTime($courierInfo->created_at, 'd M Y') }}</h5>
                     </div>

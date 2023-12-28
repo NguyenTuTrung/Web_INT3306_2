@@ -95,6 +95,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('courier/date/search', 'CourierSettingController@courierDateSearch')->name('courier.date.search');
         Route::get('branch/income', 'CourierSettingController@branchIncome')->name('branch.income');
         Route::get('branch/income/date/search', 'CourierSettingController@branchIncomeDateSearch')->name('branch.income.date.search');
+        Route::get('courier/select', 'CourierSettingController@courierBranchSelect')->name('courier.select');
+
        
 
         // Report
