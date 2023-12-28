@@ -43,6 +43,7 @@ class CourierController extends Controller
         ]);
         $sender = Auth::user();
         $courier = new CourierInfo();
+        $time_logs = json_decode($courier->time_logs, true);
         $courier->invoice_id = getTrx();
         $courier->code = getTrx();
         $courier->sender_branch_id = $sender->branch_id;
@@ -58,6 +59,8 @@ class CourierController extends Controller
         $courier->receiver_address = $request->receiver_address;
         $courier->receiver_branch_id = $request->branch;
         $courier->status = 0;
+        $time_logs[] = date('Y-m-d H:i:s');
+        $courier->time_logs = json_encode($time_logs);
         $courier->save();
 
         $totalAmount = 0;
@@ -108,6 +111,9 @@ class CourierController extends Controller
 
         foreach($couriers as $courier)
         {
+            $time_logs = json_decode($courier->time_logs, true);
+            array_push($time_logs, date('Y-m-d H:i:s'));
+            $courier->time_logs = json_encode($time_logs);
             $courier->status = $courier->status + 1;
             $courier->save();
 
@@ -221,7 +227,7 @@ class CourierController extends Controller
             'code' => 'required|exists:courier_infos,code'
         ]);
         $user = Auth::user();
-        $courier = CourierInfo::where('code', $request->code)->where('status', 0)->firstOrFail();
+        $courier = CourierInfo::where('status', 0)->orWhere('status', 5)->where('code', $request->code)->firstOrFail();
         $courierPayment = CourierPayment::where('courier_info_id', $courier->id)->where('status', 0)->firstOrFail();
         $courierPayment->receiver_id = $user->id;
         $courierPayment->branch_id = $user->branch_id;
@@ -240,6 +246,9 @@ class CourierController extends Controller
         ]);
         $user = Auth::user();
         $courier = CourierInfo::where('code', $request->code)->where('status', 5)->firstOrFail();
+        $time_logs = json_decode($courier->time_logs, true);
+        array_push($time_logs, date('Y-m-d H:i:s'));
+        $courier->time_logs = json_encode($time_logs);
         $courier->receiver_staff_id = $user->id;
         $courier->status = 6;
         $courier->save();
@@ -288,8 +297,11 @@ class CourierController extends Controller
         for($i=0; $i<count($request->couriers); $i++)
         {
             $courierInfos = CourierInfo::where('id', $request->couriers[$i])->where('status', 0)->firstOrFail();
+            $time_logs = json_decode($courierInfos->time_logs, true);
             $courierInfos->receiver_warehouse_id = Branch::where('id', Auth::user()->branch_id)->latest()->first()->warehouse_id;;
             $courierInfos->status = $courierInfos->status + 1;
+            array_push($time_logs, date('Y-m-d H:i:s'));
+            $courierInfos->time_logs = json_encode($time_logs);
             $courierInfos->save();
         }
 

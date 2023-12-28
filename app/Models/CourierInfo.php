@@ -57,4 +57,9 @@ class CourierInfo extends Model
     {
         return $this->hasMany(CourierProduct::class, 'courier_info_id')->with('type');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

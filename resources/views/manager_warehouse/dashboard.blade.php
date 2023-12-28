@@ -86,7 +86,6 @@
                                 <th>@lang('Creations Date')</th>
                                 <th>@lang('Payment Status')</th>
                                 <th>@lang('Status')</th>
-                                <th>@lang('Action')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,6 +100,8 @@
                                     <span>
                                         @if($courierInfo->receiver_warehouse_id)
                                             {{__($courierInfo->receiverWarehouse->name)}}
+                                        @elseif($courierInfo->receiver_branch_id)
+                                            {{__($courierInfo->receiverBranch->name)}}
                                         @else
                                             @lang('')
                                         @endif

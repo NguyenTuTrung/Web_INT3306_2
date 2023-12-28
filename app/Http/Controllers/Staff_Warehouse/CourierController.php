@@ -39,6 +39,9 @@ class CourierController extends Controller
         
         for ($i=0; $i <count($request->couriers); $i++) { 
             $courierInfos = CourierInfo::where('status', 2)->orWhere('status', 4)->where('id', $request->couriers[$i])->firstOrFail();
+            $time_logs = json_decode($courierInfos->time_logs, true);
+            array_push($time_logs, date('Y-m-d H:i:s'));
+            $courierInfos->time_logs = json_encode($time_logs);
             $courierInfos->receiver_branch_id = $request->branch;
             $courierInfos->receiver_warehouse_id = $request->warehouse;
             $courierInfos->sender_staff_id = $sender->id;
@@ -100,7 +103,7 @@ class CourierController extends Controller
         $user = Auth::user();
         $pageTitle = "Courier Delivery List";
         $emptyMessage = "No data found";
-        $courierDeliveys = CourierInfo::with('senderBranch', 'senderWarehouse','receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->where('status',1)->orWhere('status', 3)->where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->paginate(getPaginate());
+        $courierDeliveys = CourierInfo::with('senderBranch', 'senderWarehouse','receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo', 'user')->where('status',1)->orWhere('status', 3)->where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->paginate(getPaginate());
         return view('staff_warehouse.courier.delivery', compact('pageTitle', 'emptyMessage', 'courierDeliveys'));
     }
 
@@ -111,6 +114,9 @@ class CourierController extends Controller
         ]);
         $user = Auth::user();
         $courier = CourierInfo::where('status', 1)->orWhere('status', 3)->where('code', $request->code)->firstOrFail();
+        $time_logs = json_decode($courier->time_logs, true);
+        array_push($time_logs, date('Y-m-d H:i:s'));
+        $courier->time_logs = json_encode($time_logs);
         $courier->receiver_staff_id = $user->id;
         $courier->status = $courier->status + 1;
         $courier->save();

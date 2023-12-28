@@ -1,6 +1,6 @@
 @extends('delivery_man.layouts.app')
 @section('panel')
-    <div class="card">
+    <div class="card" id="card">
         <div class="card-body">
             <div class="content-header">
                 <h3>
@@ -10,7 +10,7 @@
             </div>
 
             <div class="invoice">
-            <div class="row mt-3">
+                <div class="row mt-3">
                     <div class="col-lg-6">
                         <h5 >@lang('Date'): {{ showDateTime($courierInfo->created_at, 'd M Y') }}</h5>
                     </div>
@@ -119,7 +119,7 @@
             </div>
         </div>
     </div>
-</div>
+
 
 
 <div class="modal fade" id="paymentBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -151,9 +151,10 @@
 @push('script')
 <script>
     "use strict";
-    $('.printInvoice').click(function () { 
-        window.print();
-        return false;
+    $(document).ready(function() {
+        $('.printInvoice').click(function () { 
+            $('#card').printThis();
+        });
     });
 
     $('.payment').on('click', function () {

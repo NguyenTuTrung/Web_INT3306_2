@@ -2,6 +2,7 @@
 
 use App\Lib\GoogleAuthenticator;
 use App\Lib\SendSms;
+use App\Models\CourierInfo;
 use App\Models\DeliveryCourier;
 use App\Models\EmailTemplate;
 use App\Models\Extension;
@@ -579,6 +580,10 @@ function menuActive($routeName, $type = null)
     }
 }
 
+function getArray($json) {
+    $array = json_decode($json, true);
+    return $array;
+}
 
 function imagePath()
 {
@@ -724,6 +729,12 @@ function getStatus($id)
     return $status;
 }
 
+function getTime($id)
+{
+    $time = DeliveryCourier::where('courier_id',$id)->latest()->first()->updated_at;
+    return $time;
+}
+
 function getDeliveryCourierId($id)
 {
     $id = DeliveryCourier::where('courier_id',$id)->latest()->first()->id;
@@ -734,4 +745,10 @@ function getReason($id)
 {
     $reason = DeliveryCourier::where('courier_id',$id)->latest()->first()->reasons;
     return $reason;
+}
+
+function getIdByNumber($orderNumber)
+{
+    $id = CourierInfo::where('code',$orderNumber)->latest()->first()->id;
+    return $id;
 }

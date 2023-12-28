@@ -13,7 +13,6 @@ use App\Models\CourierProduct;
 use App\Models\CourierPayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CourierController extends Controller
 {

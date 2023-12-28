@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\CourierProduct;
 use App\Models\Frontend;
 use App\Models\Language;
 use App\Models\Page;
@@ -129,6 +130,8 @@ class SiteController extends Controller
     {
         $pageTitle = "Order Tracking";
         $orderNumber = null;
+        $courierProducts = [];
+        $timeLog = [];
         if($request->order_number){
             $request->validate([
                 'order_number' => 'required|exists:courier_infos,code',
@@ -138,8 +141,10 @@ class SiteController extends Controller
                 $notify[] = ['success', 'Order Number Invalid'];
                 return back()->withNotify($notify);
             }
+            $courierProducts = CourierProduct::where('courier_info_id', getIdByNumber($request->order_number))->with('type')->get();
+            $timeLog = getArray($orderNumber->time_logs);
         }
-        return view($this->activeTemplate . 'order_tracking', compact('pageTitle', 'orderNumber'));
+        return view($this->activeTemplate . 'order_tracking', compact('pageTitle', 'orderNumber', 'courierProducts', 'timeLog'));
     }
 
     public function placeholderImage($size = null){
