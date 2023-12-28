@@ -137,7 +137,6 @@ class CourierController extends Controller
         return view('staff.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
-
     public function manageCourierList()
     {
         $user = Auth::user();

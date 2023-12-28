@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.1",
+        "barryvdh/laravel-dompdf": "^2.0",
         "coingate/coingate-php": "^3.0",
         "ezyang/htmlpurifier": "^4.13",
         "fideloper/proxy": "^4.4",
@@ -26,11 +27,11 @@
         "phpmailer/phpmailer": "^6.2",
         "razorpay/razorpay": "^2.5",
         "sendgrid/sendgrid": "^7.6",
+        "simplesoftwareio/simple-qrcode": "^2.",
         "stripe/stripe-php": "^7.72",
         "textmagic/sdk": "dev-master",
         "twilio/sdk": "^6.23",
-        "vonage/client": "^2.4",
-        "simplesoftwareio/simple-qrcode": "^2."
+        "vonage/client": "^2.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",

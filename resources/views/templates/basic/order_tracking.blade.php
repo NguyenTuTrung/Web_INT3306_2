@@ -154,7 +154,6 @@
                         </div> <!-- /.col- -->
 
                         <div class="col-lg-5">
-                            <br><br><br><br><br><br><br>
                             <div class="booking-summary_block">
                                 <div class="booking-summary-box">
                                     <h5>Shipping Record</h5>

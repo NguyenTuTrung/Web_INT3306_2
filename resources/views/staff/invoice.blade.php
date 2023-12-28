@@ -1,6 +1,6 @@
 @extends('staff.layouts.app')
 @section('panel')
-    <div class="card">
+    <div class="card" id="card">
         <div class="card-body">
             <div class="content-header">
                 <h3>
@@ -119,7 +119,6 @@
             </div>
         </div>
     </div>
-</div>
 
 
 <div class="modal fade" id="paymentBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -152,8 +151,10 @@
 <script>
     "use strict";
     $('.printInvoice').click(function () { 
-        window.print();
-        return false;
+        var doc = new jsPDF();
+
+        doc.fromHTML($("#card").html(), 15, 15);
+        doc.save('invoice.pdf');
     });
 
     $('.payment').on('click', function () {

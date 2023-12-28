@@ -36,6 +36,7 @@
 <script src="{{asset('assets/staff/js/vendor/prism.js')}}"></script>
 <script src="{{asset('assets/staff/js/vendor/select2.min.js')}}"></script>
 <script src="{{asset('assets/staff/js/app.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 <script>
     "use strict";
     bkLib.onDomLoaded(function() {

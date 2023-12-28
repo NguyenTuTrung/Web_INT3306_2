@@ -113,7 +113,7 @@
                         @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0)
                             <button type="button" class="btn btn-success m-1 payment" data-code="{{$courierInfo->code}}"><i class="fa fa-credit-card"></i>@lang('Make Payment')</button>
                         @endif
-                        <button class="btn btn-primary m-1 printInvoice"><i class="fa fa-download"></i>@lang('Print')</button>
+                        <a class="btn btn-primary m-1" onclick="toPDF()"><i class="fa fa-download"></i>@lang('Print')</a>
                     </div>
                 </div>
             </div>
@@ -151,16 +151,18 @@
 @push('script')
 <script>
     "use strict";
-    $(document).ready(function() {
-        $('.printInvoice').click(function () { 
-            $('#card').printThis();
-        });
-    });
 
     $('.payment').on('click', function () {
         var modal = $('#paymentBy');
         modal.find('input[name=code]').val($(this).data('code'))
         modal.modal('show');
     });
+
+    function toPDF() {
+        var doc = new jsPDF();
+
+        doc.text('hello world', 10, 10);
+        doc.save('html.pdf')
+    }
 </script>
 @endpush
