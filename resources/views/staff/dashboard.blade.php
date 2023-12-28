@@ -165,7 +165,7 @@
                                         @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 1)
                                             <a href="javascript:void(0)" title="" class="icon-btn btn--info ml-1 delivery" data-code="{{$courierInfo->code}}">@lang('Delivery')</a>
                                         @endif
-                                        @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0)
+                                        @if(($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0) || ($courierInfo->status  == 6 && $courierInfo->paymentInfo->status == 0))
                                             <a href="javascript:void(0)" title="" class="icon-btn btn--success ml-1 payment" data-code="{{$courierInfo->code}}">@lang('Payment')</a>
                                         @endif
                                        <a href="{{route('staff.courier.invoice', encrypt($courierInfo->id))}}" title="" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>

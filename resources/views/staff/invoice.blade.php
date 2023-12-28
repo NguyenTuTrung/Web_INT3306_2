@@ -110,7 +110,7 @@
             <div class="row no-print">
                 <div class="col-sm-12">
                     <div class="float-sm-right">
-                        @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0)
+                        @if(($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0) || ($courierInfo->status  == 6 && $courierInfo->paymentInfo->status == 0))
                             <button type="button" class="btn btn-success m-1 payment" data-code="{{$courierInfo->code}}"><i class="fa fa-credit-card"></i>@lang('Make Payment')</button>
                         @endif
                         <button class="btn btn-primary m-1 printInvoice"><i class="fa fa-download"></i>@lang('Print')</button>
@@ -151,10 +151,8 @@
 <script>
     "use strict";
     $('.printInvoice').click(function () { 
-        var doc = new jsPDF();
-
-        doc.fromHTML($("#card").html(), 15, 15);
-        doc.save('invoice.pdf');
+        window.print();
+        return false;
     });
 
     $('.payment').on('click', function () {

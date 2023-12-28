@@ -110,10 +110,10 @@
             <div class="row no-print">
                 <div class="col-sm-12">
                     <div class="float-sm-right">
-                        @if($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0)
+                        @if(($courierInfo->status  == 0 && $courierInfo->paymentInfo->status == 0) || ($courierInfo->status  == 6 && $courierInfo->paymentInfo->status == 0))
                             <button type="button" class="btn btn-success m-1 payment" data-code="{{$courierInfo->code}}"><i class="fa fa-credit-card"></i>@lang('Make Payment')</button>
                         @endif
-                        <a class="btn btn-primary m-1" onclick="toPDF()"><i class="fa fa-download"></i>@lang('Print')</a>
+                        <button class="btn btn-primary m-1 printInvoice"><i class="fa fa-download"></i>@lang('Print')</button>
                     </div>
                 </div>
             </div>
@@ -158,11 +158,9 @@
         modal.modal('show');
     });
 
-    function toPDF() {
-        var doc = new jsPDF();
-
-        doc.text('hello world', 10, 10);
-        doc.save('html.pdf')
-    }
+    $('.printInvoice').click(function () { 
+        window.print();
+        return false;
+    });
 </script>
 @endpush
