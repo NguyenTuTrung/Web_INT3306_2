@@ -64,7 +64,7 @@
                                         @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 2)
                                             <span class="badge badge--danger">Unsuccessful Delivery</span>
                                         @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
-                                            <span class="badge badge--primary">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
+                                            <span class="badge badge--danger">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
                                         @endif
                                     </td>
                                 

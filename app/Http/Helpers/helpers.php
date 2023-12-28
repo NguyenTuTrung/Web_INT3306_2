@@ -723,3 +723,15 @@ function getStatus($id)
     $status = DeliveryCourier::where('courier_id',$id)->latest()->first()->status;
     return $status;
 }
+
+function getDeliveryCourierId($id)
+{
+    $id = DeliveryCourier::where('courier_id',$id)->latest()->first()->id;
+    return $id;
+}
+
+function getReason($id)
+{
+    $reason = DeliveryCourier::where('courier_id',$id)->latest()->first()->reasons;
+    return $reason;
+}

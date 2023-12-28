@@ -64,7 +64,7 @@
                                         @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 2)
                                             <span class="badge badge--danger">Unsuccessful Delivery</span>
                                         @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
-                                            <span class="badge badge--primary">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
+                                            <span class="badge badge--danger">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
                                         @endif
                                     </td>
                                 
@@ -72,10 +72,28 @@
                                        <a href="{{route('staff.courier.invoice', encrypt($courierInfo->id))}}" class="icon-btn bg--10 ml-1">@lang('Invoice')</a>
                                        <a href="{{route('staff.courier.details', encrypt($courierInfo->id))}}" class="icon-btn btn--priamry ml-1">@lang('Details')</a>
                                         @if($courierInfo->status >= 7 && getStatus($courierInfo->id) == 2)
-                                            <a href="javascript:void(0)" title="" class="icon-btn btn--primary ml-1 confirm" data-code="{{$courierInfo->id}}">@lang('Confirm')</a>
+                                            <a href="javascript:void(0)" title="" class="icon-btn btn--primary ml-1 confirm" data-code="{{getDeliveryCourierId($courierInfo->id)}}">@lang('Confirm')</a>
                                         @endif
                                         @if($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
                                             <a href="javascript:void(0)" title="" class="icon-btn btn--danger ml-1 reason">@lang('Reason')</a>
+                                            <div class="modal fade" id="reasonBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Reason')</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>@lang(getReason($courierInfo->id))</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn--secondary" data-dismiss="modal">@lang('Close')</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -94,8 +112,6 @@
             </div>
         </div>
     </div>
-
-
 
 <div class="modal fade" id="confirmBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -122,29 +138,7 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="reasonBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Reason')</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            <div class="modal-body">
-                <p>@lang('')</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn--secondary" data-dismiss="modal">@lang('Close')</button>
-                <button type="submit" class="btn btn--success">@lang('Yes')</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
-
-
 
 @push('script')
 <script>

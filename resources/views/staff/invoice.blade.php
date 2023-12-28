@@ -53,7 +53,7 @@
                          @endif
                     <br>
                     <b>@lang('Sender At Branch'):</b> {{__($courierInfo->senderBranch->name)}}<br>
-                    @if($courierInfo->status == 6)
+                    @if($courierInfo->status >= 6)
                         <b>@lang('Receiver At Branch'):</b> {{__($courierInfo->receiverBranch->name)}}<br>
                     @endif
                 </div>

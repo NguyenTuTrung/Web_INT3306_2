@@ -99,7 +99,7 @@
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
-                                    @if($courierInfo->status == 6)
+                                    @if($courierInfo->status >= 6)
                                         <span>
                                             @if($courierInfo->receiver_branch_id)
                                                 {{__($courierInfo->receiverBranch->name)}}

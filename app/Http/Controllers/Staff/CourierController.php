@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Type;
-use DNS1D;
 use App\Models\CourierInfo;
 Use App\Models\DeliveryCourier;
 use App\Models\User;

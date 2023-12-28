@@ -26,7 +26,7 @@
                                 </td>
 
                                 <td data-label="@lang('Receiver Branch - Staff')">
-                                    @if($courierInfo->status == 6)
+                                    @if($courierInfo->status >= 6)
                                         <span>
                                             @if($courierInfo->receiver_branch_id)
                                                 {{__($courierInfo->receiverBranch->name)}}
@@ -65,12 +65,51 @@
                                     @if($courierInfo->status == 0)
                                         <span class="badge badge--primary">@lang('Received')</span>
                                     @elseif($courierInfo->status == 1)
-                                        <span class="badge badge--success">@lang('Delivery')</span>
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverWarehouse->name}}</span>
+                                    @elseif($courierInfo->status == 2)
+                                        <span class="badge badge--primary">{{$courierInfo->receiverWarehouse->name}} @lang('Received')</span>
+                                    @elseif($courierInfo->status == 3)
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverWarehouse->name}}</span>
+                                    @elseif($courierInfo->status == 4)
+                                        <span class="badge badge--primary">{{$courierInfo->receiverWarehouse->name}} @lang('Received')</span>
+                                    @elseif($courierInfo->status == 5)
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiverBranch->name}}</span>
+                                    @elseif($courierInfo->status == 6)
+                                        <span class="badge badge--primary">{{$courierInfo->receiverBranch->name}} @lang('Received')</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 0)
+                                        <span class="badge badge--primary">@lang('Sending To') {{$courierInfo->receiver_name}}</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 1)
+                                        <span class="badge badge--success">Successful Delivery</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 2)
+                                        <span class="badge badge--danger">Unsuccessful Delivery</span>
+                                    @elseif($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
+                                        <span class="badge badge--danger">@lang('Returned') {{$courierInfo->receiverBranch->name}}</span>
                                     @endif
                                 </td>
                             
                                 <td data-label="@lang('Action')">
                                    <a href="{{route('manager.courier.invoice', $courierInfo->id)}}" title="" class="icon-btn btn--info">@lang('Invoice')</a>
+                                   @if($courierInfo->status >= 7 && getStatus($courierInfo->id) == 3)
+                                            <a href="javascript:void(0)" title="" class="icon-btn btn--danger ml-1 reason">@lang('Reason')</a>
+                                            <div class="modal fade" id="reasonBy" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="" lass="modal-title" id="exampleModalLabel">@lang('Reason')</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>@lang(getReason($courierInfo->id))</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn--secondary" data-dismiss="modal">@lang('Close')</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                 </td>
                             </tr>
                         @empty
@@ -128,5 +167,10 @@
             $('.datepicker-here').datepicker();
         }
     })(jQuery)
+
+    $('.reason').on('click', function () {
+        var modal = $('#reasonBy');
+        modal.modal('show');
+    });
   </script>
 @endpush
