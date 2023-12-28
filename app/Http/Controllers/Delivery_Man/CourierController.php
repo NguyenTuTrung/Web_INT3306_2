@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Delivery_Man;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DNS1D;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\CourierInfo;
 use App\Models\DeliveryCourier;
 use App\Models\User;
@@ -65,8 +65,8 @@ class CourierController extends Controller
         $courierInfo = CourierInfo::where('id', decrypt($id))->first();
         $courierProductInfos = CourierProduct::where('courier_info_id', $courierInfo->id)->with('type')->get();
         $courierPayment = CourierPayment::where('courier_info_id', $courierInfo->id)->first();
-        $code = '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG($courierInfo->code, 'C128') . '" alt="barcode"   />' . "<br>" . $courierInfo->code;
-        return view('delivery_man.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'code'));
+        $qrCode = QrCode::size(150)->generate($courierInfo->code);
+        return view('delivery_man.invoice', compact('pageTitle', 'courierInfo', 'courierProductInfos', 'courierPayment', 'qrCode'));
     }
 
     public function confirmDone(Request $request)

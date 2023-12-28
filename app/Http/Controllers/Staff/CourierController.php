@@ -199,6 +199,15 @@ class CourierController extends Controller
         return view('staff.courier.dispatch', compact('pageTitle', 'emptyMessage', 'courierDispatchs'));
     }
 
+    public function return()
+    {
+        $user = Auth::user();
+        $pageTitle = "Courier Return List";
+        $emptyMessage = "No data found";
+        $courierReturns = CourierInfo::where('receiver_branch_id', $user->branch_id)->where('status','>',6)->orderBy('id', 'DESC')->with('senderBranch','receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderStaffBranch')->paginate(getPaginate());
+        return view('staff.courier.return', compact('pageTitle', 'emptyMessage', 'courierReturns'));
+    }
+
     public function details($id)
     {
         $pageTitle = "Courier Details";
@@ -234,6 +243,20 @@ class CourierController extends Controller
         $courier = CourierInfo::where('code', $request->code)->where('status', 5)->firstOrFail();
         $courier->receiver_staff_id = $user->id;
         $courier->status = 6;
+        $courier->save();
+
+        $notify[] =  ['success', 'Confirm completed'];
+        return back()->withNotify($notify);
+    }
+
+    public function returnStore(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|exists:delivery_couriers,id'
+        ]);
+        $user = Auth::user();
+        $courier = DeliveryCourier::where('id', $request->code)->where('status', 2)->firstOrFail();
+        $courier->status = $courier->status + 1;
         $courier->save();
 
         $notify[] =  ['success', 'Confirm completed'];

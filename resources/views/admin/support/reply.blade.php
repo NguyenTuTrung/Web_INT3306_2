@@ -70,7 +70,7 @@
 
 
                     @foreach($messages as $message)
-                        @if($message->admin_id == 0)
+                        @if($message->user_id == 1)
 
                             <div class="row border border-primary border-radius-3 my-3 mx-2">
 
@@ -84,7 +84,7 @@
                                     <p class="text-muted font-weight-bold my-3">
                                         @lang('Posted on') {{ showDateTime($message->created_at, 'l, dS F Y @ H:i') }}</p>
                                     <p>{{ $message->message }}</p>
-                                    @if($message->attachments()->count() > 0)
+                                    @if($message->attachments->count() > 0)
                                         <div class="my-3">
                                             @foreach($message->attachments as $k=> $image)
                                                 <a href="{{route('admin.ticket.download',encrypt($image->id))}}" class="mr-3"><i class="fa fa-file"></i>@lang('Attachment') {{++$k}}</a>
@@ -106,7 +106,7 @@
                                     <p class="text-muted font-weight-bold my-3">
                                         @lang('Posted on') {{showDateTime($message->created_at,'l, dS F Y @ H:i') }}</p>
                                     <p>{{ $message->message }}</p>
-                                    @if($message->attachments()->count() > 0)
+                                    @if($message->attachments->count() > 0)
                                         <div class="my-3">
                                             @foreach($message->attachments as $k=> $image)
                                                 <a href="{{route('admin.ticket.download',encrypt($image->id))}}" class="mr-3"><i class="fa fa-file"></i>  @lang('Attachment') {{++$k}} </a>

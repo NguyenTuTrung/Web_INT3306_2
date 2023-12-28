@@ -287,6 +287,8 @@ Route::namespace('Staff')->name('staff.')->prefix('staff')->group(function () {
                 Route::post('courier/forward/store', 'CourierController@forward_store')->name('courier.forward.store');
                 Route::get('courier/invoice/{id}', 'CourierController@invoice')->name('courier.invoice');
                 Route::get('courier/dispatch/list', 'CourierController@dispatching')->name('dispatch.list');
+                Route::get('courier/return/list', 'CourierController@return')->name('return.list');
+                Route::post('courier/return/store', 'CourierController@returnStore')->name('courier.return.store');
                 Route::get('courier/delivery/list', 'CourierController@delivery')->name('delivery.list');
                 Route::get('courier/details/{id}', 'CourierController@details')->name('courier.details');
                 Route::post('courier/payment', 'CourierController@payment')->name('courier.payment');

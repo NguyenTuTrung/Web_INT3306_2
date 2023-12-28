@@ -30,7 +30,7 @@ class HomeController extends Controller
         $totalStaffCount =  User::where('user_type', 'staff_warehouse')->where('warehouse_id', $manager_warehouse->warehouse_id)->count();
         $courierInfoCount = CourierInfo::where('receiver_warehouse_id', $manager_warehouse->warehouse_id)->orWhere('sender_warehouse_id', $manager_warehouse->warehouse_id)->count();
         $branchCount = Branch::where('warehouse_id', $manager_warehouse->warehouse_id)->count();
-        $courierInfos = CourierInfo::where('receiver_warehouse_id', $manager_warehouse->warehouse_id)->orWhere('sender_warehouse_id', $manager_warehouse->warehouse_id)->orderBy('id', 'DESC')->take(5)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo')->get();
+        $courierInfos = CourierInfo::where('receiver_warehouse_id', $manager_warehouse->warehouse_id)->orWhere('sender_warehouse_id', $manager_warehouse->warehouse_id)->orderBy('id', 'DESC')->take(5)->with('senderBranch', 'receiverBranch', 'senderStaff', 'receiverStaff', 'paymentInfo', 'senderWarehouse')->get();
         return view('manager_warehouse.dashboard', compact('pageTitle', 'warehouseListCount', 'totalStaffCount', 'courierInfoCount', 'branchCount', 'courierInfos', 'emptyMessage'));
     }
 
@@ -78,7 +78,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "All Courier List";
         $emptyMessage = "No data found";
-        $courierInfos = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orWhere('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orWhere('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo', 'receiverBranch')->paginate(getPaginate());
         return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
     }
 
@@ -87,7 +87,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Dispatch Courier List";
         $emptyMessage = "No data found";
-        $courierInfos = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('sender_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo', 'receiverBranch')->paginate(getPaginate());
         return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
     }
 
@@ -97,7 +97,7 @@ class HomeController extends Controller
         $user = Auth::user();
         $pageTitle = "Upcoming Courier List";
         $emptyMessage = "No data found";
-        $courierInfos = CourierInfo::where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo')->paginate(getPaginate());
+        $courierInfos = CourierInfo::where('receiver_warehouse_id', $user->warehouse_id)->orderBy('id', 'DESC')->with('senderWarehouse', 'receiverWarehouse', 'senderStaff', 'receiverStaff', 'paymentInfo', 'receiverBranch')->paginate(getPaginate());
         return view('manager_warehouse.courier.index', compact('pageTitle', 'emptyMessage', 'courierInfos'));
     }
 

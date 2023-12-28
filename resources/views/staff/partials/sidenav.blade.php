@@ -70,6 +70,14 @@
                     </a>
                 </li>
 
+                <li class="sidebar-menu-item {{menuActive('staff.return.list')}}">
+                    <a href="{{route('staff.return.list')}}" class="nav-link"
+                       data-default-url="{{ route('staff.return.list') }}">
+                        <i class="menu-icon las la-undo-alt"></i>
+                        <span class="menu-title">@lang('Returned Courier')</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-menu-item {{menuActive('staff.branch*')}}">
                     <a href="{{route('staff.branch.index')}}" class="nav-link"
                        data-default-url="{{ route('staff.branch.index') }}">
